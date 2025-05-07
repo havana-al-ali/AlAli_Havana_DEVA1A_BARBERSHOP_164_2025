@@ -13,6 +13,65 @@ from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.erreurs.exceptions import *
 from APP_FILMS_164.films.gestion_films_wtf_forms import FormWTFUpdateFilm, FormWTFAddFilm, FormWTFDeleteFilm
 
+"""
+    Auteur : OM 2021.03.16
+    Définition d'une "route" /genres_afficher
+
+    Test : ex : http://127.0.0.1:5575/genres_afficher
+
+    Paramètres : order_by : ASC : Ascendant, DESC : Descendant
+                id_genre_sel = 0 >> tous les genres.
+                id_genre_sel = "n" affiche le genre dont l'id est "n"
+"""
+
+
+@app.route("/employes/<string:order_by>/<int:id_employes_sel>", methods=['GET', 'POST'])
+def employes_afficher(order_by, id_employes_sel):
+    if request.method == "GET":
+        try:
+            with DBconnection() as mc_afficher:
+                if order_by == "ASC" and id_employes_sel == 0:
+                    strsql_employes_afficher = """SELECT * from t_employes ORDER BY id_employes ASC"""
+                    mc_afficher.execute(strsql_employes_afficher)
+                elif order_by == "ASC":
+                    # C'EST LA QUE VOUS ALLEZ DEVOIR PLACER VOTRE PROPRE LOGIQUE MySql
+                    # la commande MySql classique est "SELECT * FROM t_genre"
+                    # Pour "lever"(raise) une erreur s'il y a des erreurs sur les noms d'attributs dans la table
+                    # donc, je précise les champs à afficher
+                    # Constitution d'un dictionnaire pour associer l'id du genre sélectionné avec un nom de variable
+                    valeur_id_genre_selected_dictionnaire = {"value_id_genre_selected": id_employes_sel}
+                    strsql_genres_afficher = """SELECT * FROM t_employes WHERE id_employes = %(value_id_genre_selected)s"""
+
+                    mc_afficher.execute(strsql_genres_afficher, valeur_id_genre_selected_dictionnaire)
+                else:
+                    strsql_genres_afficher = """SELECT *  FROM t_employes ORDER BY id_employes DESC"""
+
+                    mc_afficher.execute(strsql_genres_afficher)
+
+                data_genres = mc_afficher.fetchall()
+
+                print("data_genres ", data_genres, " Type : ", type(data_genres))
+
+                # Différencier les messages si la table est vide.
+                if not data_genres and id_employes_sel == 0:
+                    flash("""La table "t_genre" est vide. !!""", "warning")
+                elif not data_genres and id_employes_sel > 0:
+                    # Si l'utilisateur change l'id_genre dans l'URL et que le genre n'existe pas,
+                    flash(f"Le genre demandé n'existe pas !!", "warning")
+                else:
+                    # Dans tous les autres cas, c'est que la table "t_genre" est vide.
+                    # OM 2020.04.09 La ligne ci-dessous permet de donner un sentiment rassurant aux utilisateurs.
+                    flash(f"Données genres affichés !!", "success")
+
+        except Exception as Exception_genres_afficher:
+            raise ExceptionEmployesAfficher(f"fichier : {Path(__file__).name}  ;  "
+                                          f"{employes_afficher.__name__} ; "
+                                          f"{Exception_genres_afficher}")
+
+    # Envoie la page "HTML" au serveur.
+    return render_template("employes/employes_afficher.html", data=data_genres)
+
+
 """Ajouter un film grâce au formulaire "film_add_wtf.html"
 Auteur : OM 2022.04.11
 Définition d'une "route" /film_add
@@ -31,16 +90,17 @@ Remarque :  Dans le champ "nom_film_update_wtf" du formulaire "films/films_updat
 @app.route("/film_add", methods=['GET', 'POST'])
 def film_add_wtf():
     # Objet formulaire pour AJOUTER un film
-    form_add_film = FormWTFAddFilm()
+    form_add_emp = FormWTFAddFilm()
     if request.method == "POST":
         try:
-            if form_add_film.validate_on_submit():
-                nom_film_add = form_add_film.nom_film_add_wtf.data
+            if form_add_emp.validate_on_submit():
+                nom_emp_add = form_add_emp.nom_emp_wtf.data
 
-                valeurs_insertion_dictionnaire = {"value_nom_film": nom_film_add}
+                valeurs_insertion_dictionnaire = {"value_nom_emp": nom_emp_add}
                 print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
 
-                strsql_insert_film = """INSERT INTO t_employes (id_employes,nom,prenom, telephone, specialite) VALUES (NULL,%(value_nom),%(value_prenom),%(value_telephone), %(value_specilaite)s) """
+                #strsql_insert_film = """INSERT INTO t_employes (id_employes,nom,prenom,telephone,specialite) VALUES (NULL,%(value_nom),%(value_prenom),%(value_telephone), %(value_specilaite)s) """
+                strsql_insert_film = """INSERT INTO t_employes (id_employes,nom) VALUES (NULL,%(value_nom_emp)s) """
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(strsql_insert_film, valeurs_insertion_dictionnaire)
 
