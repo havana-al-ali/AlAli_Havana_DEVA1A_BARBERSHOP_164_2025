@@ -1,0 +1,176 @@
+from pathlib import Path
+from flask import redirect, request, session, url_for, flash, render_template
+from APP_FILMS_164.database.database_tools import DBconnection
+from APP_FILMS_164.erreurs.exceptions import *
+from APP_FILMS_164.employes.gestion_employes_wtf_forms import FormWTFUpdateEmploye, FormWTFAddEmploye, FormWTFDeleteEmploye
+
+@app.route("/employes/<string:order_by>/<int:id_employe_sel>", methods=['GET', 'POST'])
+def employes_afficher(order_by, id_employe_sel):
+    if request.method == "GET":
+        try:
+            with DBconnection() as mc_afficher:
+                if order_by == "ASC" and id_employe_sel == 0:
+                    strsql_employes_afficher = """SELECT * from t_employes ORDER BY id_employes ASC"""
+                    mc_afficher.execute(strsql_employes_afficher)
+                elif order_by == "ASC":
+                    valeur_id_employes_selected_dictionnaire = {"value_id_employes_selected": id_employe_sel}
+                    strsql_employes_afficher = """SELECT * FROM t_employes WHERE id_employes = %(value_id_employes_selected)s"""
+                    mc_afficher.execute(strsql_employes_afficher, valeur_id_employes_selected_dictionnaire)
+                else:
+                    strsql_employes_afficher = """SELECT * FROM t_employes ORDER BY id_employes DESC"""
+                    mc_afficher.execute(strsql_employes_afficher)
+
+                data_employes = mc_afficher.fetchall()
+                print("data_employes ", data_employes, " Type : ", type(data_employes))
+
+                if not data_employes and id_employe_sel == 0:
+                    flash("""La table "t_employes" est vide. !!""", "warning")
+                elif not data_employes and id_employe_sel > 0:
+                    flash(f"L'employé demandé n'existe pas !!", "warning")
+                else:
+                    flash(f"Données employées affichées !!", "success")
+
+        except Exception as Exception_employes_afficher:
+            raise ExceptionEmployesAfficher(f"fichier : {Path(__file__).name}  ;  "
+                                          f"{employes_afficher.__name__} ; "
+                                          f"{Exception_employes_afficher}")
+
+    return render_template("employes/employes_afficher.html", data=data_employes)
+
+
+@app.route("/employe_add", methods=['GET', 'POST'])
+def employe_add_wtf():
+    form_add_employe = FormWTFAddEmploye()
+    if request.method == "POST":
+        try:
+            if form_add_employe.validate_on_submit():
+                nom_emp_add = form_add_employe.nom_employe_wtf.data
+                prenom_emp_add = form_add_employe.prenom_employe_wtf.data
+                telephone_emp_add = form_add_employe.telephone_employe_wtf.data
+                specialite_emp_add = form_add_employe.specialite_employe_wtf.data
+
+                valeurs_insertion_dictionnaire = {
+                    "value_nom_employe": nom_emp_add,
+                    "value_prenom_employe": prenom_emp_add,
+                    "value_telephone_employe": telephone_emp_add,
+                    "value_specialite_employe": specialite_emp_add
+                }
+                print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
+
+                strsql_insert_employe = """INSERT INTO t_employes (id_employes, nom, prenom, telephone, specialite) 
+                                           VALUES (NULL, %(value_nom_employe)s, %(value_prenom_employe)s, %(value_telephone_employe)s, %(value_specialite_employe)s)"""
+                with DBconnection() as mconn_bd:
+                    mconn_bd.execute(strsql_insert_employe, valeurs_insertion_dictionnaire)
+
+                flash(f"Données employé insérées !!", "success")
+                print(f"Données employé insérées !!")
+
+                return redirect(url_for('employes_afficher', id_employe_sel=0))
+
+        except Exception as Exception_employes_ajouter_wtf:
+            raise ExceptionEmployesAjouterWtf(f"fichier : {Path(__file__).name}  ;  "
+                                             f"{employe_add_wtf.__name__} ; "
+                                             f"{Exception_employes_ajouter_wtf}")
+
+    return render_template("employes/employe_add_wtf.html", form_add_employe=form_add_employe)
+
+
+@app.route("/employe_update", methods=['GET', 'POST'])
+def employe_update_wtf():
+    id_employe_update = request.values['id_employe_btn_edit_html']
+    form_update_employe = FormWTFUpdateEmploye()
+
+    try:
+        if request.method == "POST" and form_update_employe.submit.data:
+            nom_employe_update = form_update_employe.nom_employe_update_wtf.data
+            prenom_employe_update = form_update_employe.prenom_employe_update_wtf.data
+            telephone_employe_update = form_update_employe.telephone_employe_update_wtf.data
+            specialite_employe_update = form_update_employe.specialite_employe_update_wtf.data
+
+            valeur_update_dictionnaire = {
+                "value_id_employe": id_employe_update,
+                "value_nom_employe": nom_employe_update,
+                "value_prenom_employe": prenom_employe_update,
+                "value_telephone_employe": telephone_employe_update,
+                "value_specialite_employe": specialite_employe_update
+            }
+            print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
+
+            str_sql_update_employe = """UPDATE t_employes SET nom = %(value_nom_employe)s,
+                                                              prenom = %(value_prenom_employe)s,
+                                                              telephone = %(value_telephone_employe)s,
+                                                              specialite = %(value_specialite_employe)s
+                                                              WHERE id_employes = %(value_id_employe)s"""
+            with DBconnection() as mconn_bd:
+                mconn_bd.execute(str_sql_update_employe, valeur_update_dictionnaire)
+
+            flash(f"Donnée employé mise à jour !!", "success")
+            print(f"Donnée employé mise à jour !!")
+
+            return redirect(url_for('employes_afficher', id_employe_sel=id_employe_update))
+        elif request.method == "GET":
+            str_sql_id_employe = "SELECT * FROM t_employes WHERE id_employes = %(value_id_employe)s"
+            valeur_select_dictionnaire = {"value_id_employe": id_employe_update}
+            with DBconnection() as mybd_conn:
+                mybd_conn.execute(str_sql_id_employe, valeur_select_dictionnaire)
+            data_employe = mybd_conn.fetchone()
+            print("data_employe ", data_employe, " type ", type(data_employe), " employé ",
+                  data_employe["nom"])
+
+            form_update_employe.nom_employe_update_wtf.data = data_employe["nom"]
+            form_update_employe.prenom_employe_update_wtf.data = data_employe["prenom"]
+            form_update_employe.telephone_employe_update_wtf.data = data_employe["telephone"]
+            form_update_employe.specialite_employe_update_wtf.data = data_employe["specialite"]
+
+    except Exception as Exception_employe_update_wtf:
+        raise ExceptionEmployeUpdateWtf(f"fichier : {Path(__file__).name}  ;  "
+                                       f"{employe_update_wtf.__name__} ; "
+                                       f"{Exception_employe_update_wtf}")
+
+    return render_template("employes/employe_update_wtf.html", form_update_employe=form_update_employe)
+
+
+@app.route("/employe_delete", methods=['GET', 'POST'])
+def employe_delete_wtf():
+    data_employe_delete = None
+    btn_submit_del = None
+    id_employe_delete = request.values['id_employe_btn_delete_html']
+
+    form_delete_employe = FormWTFDeleteEmploye()
+    try:
+        if form_delete_employe.submit_btn_annuler.data:
+            return redirect(url_for("employes_afficher", id_employe_sel=0))
+
+        if form_delete_employe.submit_btn_conf_del_employe.data:
+            data_employe_delete = session['data_employe_delete']
+            flash(f"Effacer l'employé de façon définitive de la BD !!!", "danger")
+            btn_submit_del = True
+
+        if form_delete_employe.submit_btn_del_employe.data:
+            valeur_delete_dictionnaire = {"value_id_employe": id_employe_delete}
+            str_sql_delete_employe = """DELETE FROM t_employes WHERE id_employes = %(value_id_employe)s"""
+            with DBconnection() as mconn_bd:
+                mconn_bd.execute(str_sql_delete_employe, valeur_delete_dictionnaire)
+
+            flash(f"Employé définitivement effacé !!", "success")
+            return redirect(url_for('employes_afficher', id_employe_sel=0))
+
+        if request.method == "GET":
+            valeur_select_dictionnaire = {"value_id_employe": id_employe_delete}
+            str_sql_employe_delete = """SELECT * FROM t_employes WHERE id_employes = %(value_id_employe)s"""
+            with DBconnection() as mydb_conn:
+                mydb_conn.execute(str_sql_employe_delete, valeur_select_dictionnaire)
+                data_employe_delete = mydb_conn.fetchall()
+                session['data_employe_delete'] = data_employe_delete
+
+            btn_submit_del = False
+
+    except Exception as Exception_employe_delete_wtf:
+        raise ExceptionEmployeDeleteWtf(f"fichier : {Path(__file__).name}  ;  "
+                                       f"{employe_delete_wtf.__name__} ; "
+                                       f"{Exception_employe_delete_wtf}")
+
+    return render_template("employes/employe_delete_wtf.html",
+                           form_delete_employe=form_delete_employe,
+                           btn_submit_del=btn_submit_del,
+                           data_employe_del=data_employe_delete)

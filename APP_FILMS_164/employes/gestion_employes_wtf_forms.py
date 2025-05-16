@@ -11,7 +11,7 @@ from wtforms.validators import Regexp
 from wtforms.widgets import TextArea
 
 
-class FormWTFAddFilm(FlaskForm):
+class FormWTFAddEmploye(FlaskForm):
     """
         Dans le formulaire "genres_ajouter_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
@@ -31,7 +31,7 @@ class FormWTFAddFilm(FlaskForm):
     submit = SubmitField("Enregistrer emp")
 
 
-class FormWTFUpdateFilm(FlaskForm):
+class FormWTFUpdateEmploye(FlaskForm):
     """
         Dans le formulaire "film_update_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
@@ -55,7 +55,7 @@ class FormWTFUpdateFilm(FlaskForm):
     submit = SubmitField("Update film")
 
 
-class FormWTFDeleteFilm(FlaskForm):
+class FormWTFDeleteEmploye(FlaskForm):
     """
         Dans le formulaire "film_delete_wtf.html"
 
