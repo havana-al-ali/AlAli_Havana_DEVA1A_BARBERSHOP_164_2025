@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Ajouter une personne (WTF) {% endblock %}
+{% block title %} Ajouter un GENRE (WTF) {% endblock %}
 {% block body %}
 <div class="container">
 	<div class="row">
@@ -15,20 +15,6 @@
 						{{ form.nom_genre_wtf.label }}<br>
 						{{ form.nom_genre_wtf(size=32) }}<br>
 						{% for error in form.nom_genre_wtf.errors %}
-							<span style="color: red;">[{{ error }}]</span>
-						{% endfor %}
-					</p>
-                    <p>
-						{{ form.prenom_wtf.label }}<br>
-						{{ form.prenom_wtf(size=32) }}<br>
-						{% for error in form.prenom_wtf.errors %}
-							<span style="color: red;">[{{ error }}]</span>
-						{% endfor %}
-					</p>
-                    <p>
-						{{ form.telephone_wtf.label }}<br>
-						{{ form.telephone_wtf(size=32) }}<br>
-						{% for error in form.telephone_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>

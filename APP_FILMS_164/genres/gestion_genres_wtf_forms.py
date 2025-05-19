@@ -23,24 +23,7 @@ class FormWTFAjouterGenres(FlaskForm):
                                                                                   "d'espace à double, de double "
                                                                                   "apostrophe, de double trait union")
                                                                    ])
-    prenom_regexp = ""
-    prenom_wtf = StringField("Nom personne ", validators=[Length(min=2, max=20, message="min 2 max 20"),
-                                                                   Regexp(prenom_regexp,
-                                                                          message="Pas de chiffres, de caractères "
-                                                                                  "spéciaux, "
-                                                                                  "d'espace à double, de double "
-                                                                                  "apostrophe, de double trait union")
-                                                                   ])
-
-    telephone_regexp = ""
-    telephone_wtf = StringField("telephone ", validators=[Length(min=2, max=20, message="min 2 max 20"),
-                                                          Regexp(prenom_regexp,
-                                                                 message="Pas de chiffres, de caractères "
-                                                                         "spéciaux, "
-                                                                         "d'espace à double, de double "
-                                                                         "apostrophe, de double trait union")
-                                                          ])
-    submit = SubmitField("Enregistrer personne")
+    submit = SubmitField("Enregistrer genre")
 
 
 class FormWTFUpdateGenre(FlaskForm):
