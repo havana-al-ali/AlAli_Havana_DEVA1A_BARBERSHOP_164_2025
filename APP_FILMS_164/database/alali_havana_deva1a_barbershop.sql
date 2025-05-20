@@ -1,7 +1,3 @@
-DROP DATABASE IF EXISTS alali_havana_deva1_barbershop;
-CREATE DATABASE IF NOT EXISTS alali_havana_deva1_barbershop;
-USE alali_havana_deva1_barbershop;
-
 -- --------------------------------------------------------
 -- Hôte:                         127.0.0.1
 -- Version du serveur:           8.0.41 - MySQL Community Server - GPL
@@ -19,18 +15,20 @@ USE alali_havana_deva1_barbershop;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
+-- Listage de la structure de la base pour alali_havana_deva1_barbershop
+CREATE DATABASE IF NOT EXISTS `alali_havana_deva1_barbershop` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `alali_havana_deva1_barbershop`;
 
--- Listage de la structure de table barbershop. clients
-DROP TABLE IF EXISTS `t_clients`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_clients
 CREATE TABLE IF NOT EXISTS `t_clients` (
   `id_clients` int NOT NULL AUTO_INCREMENT,
-  `nom` varchar(255) DEFAULT NULL,
-  `prenom` varchar(255) DEFAULT NULL,
-  `telephone` varchar(255) DEFAULT NULL,
+  `nom` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `prenom` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telephone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`id_clients`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des donnees de la table barbershop.clients : ~20 rows (environ)
+-- Listage des données de la table alali_havana_deva1_barbershop.t_clients : ~25 rows (environ)
 INSERT INTO `t_clients` (`id_clients`, `nom`, `prenom`, `telephone`) VALUES
 	(1, 'Muller', 'Hans', '0761234567'),
 	(2, 'Schneider', 'Peter', '0799876543'),
@@ -51,10 +49,14 @@ INSERT INTO `t_clients` (`id_clients`, `nom`, `prenom`, `telephone`) VALUES
 	(17, 'Schmid', 'Adrian', '0785432167'),
 	(18, 'Zaugg', 'Patrick', '0778765432'),
 	(19, 'Stalder', 'Michael', '0763219874'),
-	(20, 'Gassmann', 'Roman', '0797654321');
+	(20, 'Gassmann', 'Roman', '0797654321'),
+	(21, 'sfghfgh', NULL, NULL),
+	(22, 'rdz', 'zt', NULL),
+	(23, 'test', 'mathieu', NULL),
+	(24, 'test', 'tset', NULL),
+	(25, 'hh', 'hava', '873653627');
 
--- Listage de la structure de table barbershop. employes
-DROP TABLE IF EXISTS `t_employes`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_employes
 CREATE TABLE IF NOT EXISTS `t_employes` (
   `id_employes` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) DEFAULT NULL,
@@ -62,16 +64,15 @@ CREATE TABLE IF NOT EXISTS `t_employes` (
   `telephone` varchar(255) DEFAULT NULL,
   `specialite` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_employes`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table barbershop.employes : ~3 rows (environ)
+-- Listage des données de la table alali_havana_deva1_barbershop.t_employes : ~3 rows (environ)
 INSERT INTO `t_employes` (`id_employes`, `nom`, `prenom`, `telephone`, `specialite`) VALUES
 	(1, 'Al Ali', 'Alan', '0787036426', 'Barbier'),
 	(2, 'Al ALi', 'Sipan', '0782443511', 'Coiffeur'),
 	(3, 'Al Ali', 'Rewan', '0786752700', 'Barbier');
 
--- Listage de la structure de table barbershop. evaluer
-DROP TABLE IF EXISTS `t_evaluer`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_evaluer
 CREATE TABLE IF NOT EXISTS `t_evaluer` (
   `id_evaluer` int NOT NULL AUTO_INCREMENT,
   `FK_clients` int DEFAULT NULL,
@@ -86,16 +87,9 @@ CREATE TABLE IF NOT EXISTS `t_evaluer` (
   CONSTRAINT `t_evaluer_ibfk_2` FOREIGN KEY (`FK_services`) REFERENCES `t_services` (`id_services`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table barbershop.evaluer : ~5 rows (environ)
-INSERT INTO `t_evaluer` (`id_evaluer`, `FK_clients`, `FK_services`, `note`, `commentaire`, `date_avis`) VALUES
-	(1, 1, 1, 5, 'Service excellent et ambiance agreable!', '2022-01-07'),
-	(2, 2, 2, 4, 'Bon rasage mais un peu long.', '2023-02-07'),
-	(3, 3, 3, 5, 'Tres satisfait de la coupe stylisee!', '2024-03-08'),
-	(4, 4, 4, 4, 'Soin de la barbe tres bien fait.', '2025-01-08'),
-	(5, 5, 5, 5, 'Coloration parfaite!', '2025-01-08');
+-- Listage des données de la table alali_havana_deva1_barbershop.t_evaluer : ~0 rows (environ)
 
--- Listage de la structure de table barbershop. executer
-DROP TABLE IF EXISTS `t_executer`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_executer
 CREATE TABLE IF NOT EXISTS `t_executer` (
   `id_executer` int NOT NULL AUTO_INCREMENT,
   `FK_employes` int DEFAULT NULL,
@@ -108,16 +102,9 @@ CREATE TABLE IF NOT EXISTS `t_executer` (
   CONSTRAINT `t_executer_ibfk_2` FOREIGN KEY (`FK_services`) REFERENCES `t_services` (`id_services`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table barbershop.executer : ~5 rows (environ)
-INSERT INTO `t_executer` (`id_executer`, `FK_employes`, `FK_services`, `duree_effective`) VALUES
-	(1, 1, 1, 35),
-	(2, 2, 2, 45),
-	(3, 3, 3, 40),
-	(4, 1, 4, 30),
-	(5, 2, 5, 60);
+-- Listage des données de la table alali_havana_deva1_barbershop.t_executer : ~0 rows (environ)
 
--- Listage de la structure de table barbershop. rencontrer
-DROP TABLE IF EXISTS `t_rencontrer`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_rencontrer
 CREATE TABLE IF NOT EXISTS `t_rencontrer` (
   `id_rencontrer` int NOT NULL AUTO_INCREMENT,
   `FK_clients` int DEFAULT NULL,
@@ -128,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `t_rencontrer` (
   KEY `FK_employes` (`FK_employes`),
   CONSTRAINT `t_rencontrer_ibfk_1` FOREIGN KEY (`FK_clients`) REFERENCES `t_clients` (`id_clients`),
   CONSTRAINT `t_rencontrer_ibfk_2` FOREIGN KEY (`FK_employes`) REFERENCES `t_employes` (`id_employes`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table barbershop.rencontrer : ~10 rows (environ)
+-- Listage des données de la table alali_havana_deva1_barbershop.t_rencontrer : ~10 rows (environ)
 INSERT INTO `t_rencontrer` (`id_rencontrer`, `FK_clients`, `FK_employes`, `date_heure`) VALUES
 	(1, 1, 1, '2025-03-07 10:30:00'),
 	(2, 2, 2, '2025-03-07 11:00:00'),
@@ -143,8 +130,7 @@ INSERT INTO `t_rencontrer` (`id_rencontrer`, `FK_clients`, `FK_employes`, `date_
 	(9, 9, 2, '2025-03-08 12:30:00'),
 	(10, 10, 3, '2025-03-08 13:00:00');
 
--- Listage de la structure de table barbershop. services
-DROP TABLE IF EXISTS `t_services`;
+-- Listage de la structure de table alali_havana_deva1_barbershop. t_services
 CREATE TABLE IF NOT EXISTS `t_services` (
   `id_services` int NOT NULL AUTO_INCREMENT,
   `nom_service` varchar(255) DEFAULT NULL,
@@ -152,9 +138,9 @@ CREATE TABLE IF NOT EXISTS `t_services` (
   `description` text,
   `duree` int DEFAULT NULL,
   PRIMARY KEY (`id_services`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table barbershop.services : ~5 rows (environ)
+-- Listage des données de la table alali_havana_deva1_barbershop.t_services : ~5 rows (environ)
 INSERT INTO `t_services` (`id_services`, `nom_service`, `prix`, `description`, `duree`) VALUES
 	(1, 'Coupe classique', 35.00, 'Coupe de cheveux pour homme', 30),
 	(2, 'Rasage a l ancienne', 40.00, 'Rasage traditionnel avec serviette chaude', 45),
