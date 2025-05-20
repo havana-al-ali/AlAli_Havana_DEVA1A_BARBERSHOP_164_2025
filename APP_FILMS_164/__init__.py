@@ -40,16 +40,30 @@ try:
     """
     from APP_FILMS_164.database import database_tools
     from APP_FILMS_164.essais_wtf_forms import gestion_essai_wtf
+
     from APP_FILMS_164.essais_wtf_forms import gestion_wtf_forms_demo_select
-    from APP_FILMS_164.genres import gestion_genres_crud
+
+    #clients
+    from APP_FILMS_164.clients import gestion_clients_crud
+    from APP_FILMS_164.clients import gestion_clients_wtf_forms
+
     from APP_FILMS_164.demos_om_164 import routes_demos
+
+    #employes
     from APP_FILMS_164.employes import gestion_employes_crud
     from APP_FILMS_164.employes import gestion_employes_wtf_forms
-    from APP_FILMS_164.films_genres import gestion_films_genres_crud
+
+
+    
+    #services
+    from APP_FILMS_164.services import gestion_services_crud
+    from APP_FILMS_164.services import gestion_services_wtf_forms
+
+    from APP_FILMS_164.emoloyes_clients import gestion_employes_clients_crud
     from APP_FILMS_164.erreurs import msg_avertissements
 
-    #from APP_FILMS_164.films import gestion_films_crud
-    #from APP_FILMS_164.films import gestion_films_wtf_forms
+  
+
 
 except Exception as Exception_init_app_films_164:
     print(f"4567756434 Une erreur est survenue {type(Exception_init_app_films_164)} dans"

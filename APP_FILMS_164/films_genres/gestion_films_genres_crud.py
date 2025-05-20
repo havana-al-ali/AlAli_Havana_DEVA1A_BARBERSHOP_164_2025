@@ -61,35 +61,35 @@ def films_genres_afficher(id_film_sel):
                     # Si l'utilisateur change l'id_film dans l'URL et qu'il ne correspond à aucun film
                     flash(f"Le film {id_film_sel} demandé n'existe pas !!", "warning")
                 else:
-                    flash(f"Données films et genres affichés !!", "success")
+                    flash(f"Données employes et clients affichés !!", "success")
 
-        except Exception as Exception_films_genres_afficher:
-            raise ExceptionFilmsGenresAfficher(f"fichier : {Path(__file__).name}  ;  {films_genres_afficher.__name__} ;"
-                                               f"{Exception_films_genres_afficher}")
+        except Exception as Exception_employes_clients_afficher:
+            raise ExceptionEmployesClientsAfficher(f"fichier : {Path(__file__).name}  ;  {employes_clients_afficher.__name__} ;"
+                                               f"{Exception_employes_clients_afficher}")
 
-    print("films_genres_afficher  ", data_genres_films_afficher)
+    print("films_genres_afficher  ", data_clients_employes_afficher)
     # Envoie la page "HTML" au serveur.
-    return render_template("films_genres/films_genres_afficher.html", data=data_genres_films_afficher)
+    return render_template("films_genres/employes_clients_afficher.html", data=data_clients_employes_afficher)
 
 
 """
-    nom: edit_genre_film_selected
+    nom: edit_client_employe_selected
     On obtient un objet "objet_dumpbd"
 
-    Récupère la liste de tous les genres du film sélectionné par le bouton "MODIFIER" de "films_genres_afficher.html"
+    Récupère la liste de tous les clients du employe sélectionné par le bouton "MODIFIER" de "employes_clients_afficher.html"
     
     Dans une liste déroulante particulière (tags-selector-tagselect), on voit :
-    1) Tous les genres contenus dans la "t_genre".
-    2) Les genres attribués au film selectionné.
-    3) Les genres non-attribués au film sélectionné.
+    1) Tous les clients contenus dans la "t_client".
+    2) Les clients attribués au film selectionné.
+    3) Les clients non-attribués au employe sélectionné.
 
     On signale les erreurs importantes
 
 """
 
 
-@app.route("/edit_genre_film_selected", methods=['GET', 'POST'])
-def edit_genre_film_selected():
+@app.route("/edit_client_employe_selected", methods=['GET', 'POST'])
+def edit_client_employe_selected():
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
