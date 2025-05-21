@@ -1,3 +1,5 @@
+
+
 -- --------------------------------------------------------
 -- Hôte:                         127.0.0.1
 -- Version du serveur:           8.0.41 - MySQL Community Server - GPL
@@ -14,7 +16,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
+DROP DATABASE IF EXISTS alali_havana_deva1_barbershop;
 -- Listage de la structure de la base pour alali_havana_deva1_barbershop
 CREATE DATABASE IF NOT EXISTS `alali_havana_deva1_barbershop` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `alali_havana_deva1_barbershop`;

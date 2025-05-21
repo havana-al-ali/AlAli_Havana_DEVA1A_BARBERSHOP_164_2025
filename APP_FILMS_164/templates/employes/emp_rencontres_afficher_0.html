@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %} Employés et leurs rencontres {% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col-md-12">
+        <h2>Employés et leurs rencontres avec clients</h2>
+        <table class="table table-responsive-sm">
+            {% if data %}
+                <thead>
+                    <tr>
+                        <th>ID Employé</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Téléphone</th>
+                        <th>Spécialité</th>
+                        <th>Rencontres prévues</th>
+                    </tr>
+                </thead>
+            {% endif %}
+            {% for employe in data %}
+            <tbody>
+                <tr>
+                    <td>{{ employe.id_employes }}</td>
+                    <td>{{ employe.nom }}</td>
+                    <td>{{ employe.prenom }}</td>
+                    <td>{{ employe.telephone }}</td>
+                    <td>{{ employe.specialite }}</td>
+                    <td>
+                        {% if employe.rencontres %}
+                            <ul class="list-unstyled">
+                                {% for rencontre in employe.rencontres %}
+                                <li>
+                                    Client: {{ rencontre.client_nom }} {{ rencontre.client_prenom }}<br>
+                                    Date: {{ rencontre.date_heure|datetimeformat }}<br>
+                                    Tel: {{ rencontre.client_telephone }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            Aucune rencontre prévue
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+            {% else %}
+                <tbody>
+                    <tr>
+                        <td colspan="6">Aucun employé trouvé</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
+89-97
+<!--                                        <a href="{{ url_for('edit_rencontre', id_rencontre=rencontre.id_rencontrer) }}"-->
+<!--                                           class="btn btn-sm btn-outline-primary">-->
+<!--                                            <i class="fas fa-edit"></i> Modifier-->
+<!--                                        </a>-->
+<!--                                        <a href="{{ url_for('delete_rencontre', id_rencontre=rencontre.id_rencontrer) }}"-->
+<!--                                           class="btn btn-sm btn-outline-danger"-->
+<!--                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette rencontre?');">-->
+<!--                                            <i class="fas fa-trash-alt"></i> Supprimer-->
+<!--                                        </a>-->
+
+
+                    <a href="{{ url_for('add_rencontre', employe_id=employe.id_employes) }}" class="btn btn-success mt-3">
+                        <i class="fas fa-plus"></i> Ajouter une rencontre
+                    </a>

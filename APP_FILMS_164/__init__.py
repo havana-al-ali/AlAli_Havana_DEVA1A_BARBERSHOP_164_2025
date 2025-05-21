@@ -44,8 +44,8 @@ try:
     from APP_FILMS_164.essais_wtf_forms import gestion_wtf_forms_demo_select
 
     #clients
-    from APP_FILMS_164.clients import gestion_clients_crud
-    from APP_FILMS_164.clients import gestion_clients_wtf_forms
+    # from APP_FILMS_164.clients import gestion_clients_crud
+    # from APP_FILMS_164.clients import gestion_clients_wtf_forms
 
     from APP_FILMS_164.demos_om_164 import routes_demos
 
@@ -59,7 +59,7 @@ try:
     from APP_FILMS_164.services import gestion_services_crud
     from APP_FILMS_164.services import gestion_services_wtf_forms
 
-    from APP_FILMS_164.emoloyes_clients import gestion_employes_clients_crud
+    # from APP_FILMS_164.emoloyes_clients import gestion_employes_clients_crud
     from APP_FILMS_164.erreurs import msg_avertissements
 
   

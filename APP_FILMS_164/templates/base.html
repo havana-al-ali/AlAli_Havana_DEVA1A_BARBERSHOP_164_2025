@@ -48,17 +48,24 @@
 				<ul class="navbar-nav">
 					<li class="nav-item">
 						<!--		Afficher la liste des genres dans l'ordre (ASC) et tous les genres (0)-->
-						<a class="nav-link" href="{{ url_for('clients_afficher', order_by='ASC', id_client_sel=0) }}">Clients</a>
+						<a class="nav-link" href="">Clients (om delete)</a>
 					</li>
                     <li class="nav-item">
 						<!--		Afficher la liste des genres dans l'ordre (ASC) et tous les genres (0)-->
 						<a class="nav-link" href="{{ url_for('employes_afficher', order_by='ASC', id_employe_sel=0) }}">Employes</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link" href="{{ url_for('employes_rencontres') }}">Employes agenda</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link" href="{{ url_for('services_afficher', order_by='ASC', id_service_sel=0) }}">Services</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navdropdownfilms" role="button"
 						   data-bs-toggle="dropdown" aria-expanded="false">
 							Films
 						</a>
+
 						<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
 							<li><a class="nav-link" href="{{ url_for('employes_afficher', order_by='ASC', id_employe_sel=0) }}">Employes</a>
 							</li>

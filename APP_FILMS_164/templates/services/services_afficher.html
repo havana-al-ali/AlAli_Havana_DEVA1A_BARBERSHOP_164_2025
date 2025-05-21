@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %} Afficher SERVICES {% endblock %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				Services
+			</p>
+            <table class="table table-bordered table-sm">
+            {% if data %}
+                <thead>
+                    <tr>
+                        <th class="align-middle">
+                            id clients
+                        </th>
+                        <th class="align-middle">
+                           nom
+                        </th>
+                        <th class="align-middle">
+                            prenom
+                        </th>
+                        <th class="align-middle">
+                           telephone
+                        </th>
+                        <th class="align-middle">
+							Date insertion (pour exemple)
+                        </th>
+                        <th class="align-middle">
+
+                        </th>
+                        <th class="align-middle">
+
+                        </th>
+                    </tr>
+                </thead>
+            {% endif %}
+
+            {% for row in data %}
+				<tbody>
+					<tr>
+						<td class="align-middle">
+							{{ row.id_services }}
+						</td>
+						<td class="align-middle">
+							{{ row.nom_service }}
+						</td>
+						<td class="align-middle">
+							{{ row.prix }}
+						</td>
+                        <td class="align-middle">
+							{{ row.description }}
+						</td>
+                        <td class="align-middle">
+							{{ row.duree }}
+						</td>
+						<td class="text-center" class="align-middle">
+							<a class="btn btn-primary" href="{{ url_for('services_ajouter_wtf') }}" role="button">Ajouter</a>
+						</td>
+						<td class="text-center" class="align-middle">
+							<a class="btn btn-warning" href="{{ url_for('service_update_wtf', id_genre_btn_edit_html=row.id_genre) }}" role="button">Edit</a>
+						</td>
+						<td class="text-center" class="align-middle">
+							<a class="btn btn-danger" href="{{ url_for('service_delete_wtf', id_genre_btn_delete_html=row.id_genre) }}" role="button">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+            {% else %}
+				<tbody>
+					<tr>
+						<td>
+							Aucun genre.
+						</td>
+						<td>
+							<a class="btn btn-primary" href="{{ url_for('services_ajouter_wtf') }}" role="button">Ajouter</a>
+						</td>
+					</tr>
+				</tbody>
+            {% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

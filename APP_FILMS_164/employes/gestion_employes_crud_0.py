@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 from flask import redirect, request, session, url_for, flash, render_template
 from APP_FILMS_164.database.database_tools import DBconnection
@@ -178,58 +177,31 @@ def employe_delete_wtf():
 
 
 @app.route('/employes_rencontres')
-def employes_rencontres():
-    # Récupérer les paramètres de filtre
-    employe_id = request.args.get('employe_id', '0')
-    date_filter = request.args.get('date_filter', '')
-    print("employe_id ", employe_id, " date_filter ", date_filter)
+def show_employes_rencontres():
     try:
         with DBconnection() as mc_afficher:
-            # 1. Récupérer tous les employés (pour le filtre)
-            mc_afficher.execute("SELECT id_employes, nom, prenom FROM t_employes ORDER BY nom, prenom")
-            employes = mc_afficher.fetchall()
-
-            # 2. Construire la requête filtrée
+            # Requête pour récupérer tous les employés avec leurs rencontres
             sql = """
-                SELECT 
-                    e.id_employes, e.nom, e.prenom, e.telephone, e.specialite,
-                    c.id_clients, c.nom AS client_nom, c.prenom AS client_prenom, 
-                    c.telephone AS client_telephone,
-                    r.id_rencontrer, r.date_heure
+                SELECT e.*, 
+                       c.nom AS client_nom, 
+                       c.prenom AS client_prenom, 
+                       c.telephone AS client_telephone,
+                       r.date_heure
                 FROM t_employes e
                 LEFT JOIN t_rencontrer r ON e.id_employes = r.FK_employes
                 LEFT JOIN t_clients c ON r.FK_clients = c.id_clients
-                WHERE 1=1
+                ORDER BY e.id_employes, r.date_heure
             """
-
-            params = []
-
-            # Filtre par employé
-            if employe_id and employe_id != '0':
-                sql += " AND e.id_employes = %s"
-                params.append(employe_id)
-
-            # Filtre par date
-            if date_filter:
-                sql += " AND DATE(r.date_heure) = %s"
-                params.append(date_filter)
-
-            sql += " ORDER BY e.nom, e.prenom, r.date_heure"
-            print("sql ", sql)
             mc_afficher.execute(sql)
             result = mc_afficher.fetchall()
 
             # Organiser les données par employé
-            employes_avec_rencontres = []
-            current_employe = None
-
+            employes = {}
             for row in result:
-                if current_employe is None or current_employe['id_employes'] != row['id_employes']:
-                    if current_employe is not None:
-                        employes_avec_rencontres.append(current_employe)
-
-                    current_employe = {
-                        'id_employes': row['id_employes'],
+                emp_id = row['id_employes']
+                if emp_id not in employes:
+                    employes[emp_id] = {
+                        'id_employes': emp_id,
                         'nom': row['nom'],
                         'prenom': row['prenom'],
                         'telephone': row['telephone'],
@@ -237,35 +209,25 @@ def employes_rencontres():
                         'rencontres': []
                     }
 
-                if row['date_heure']:
-                    current_employe['rencontres'].append({
-                        'id_rencontrer': row['id_rencontrer'],
+                if row['date_heure']:  # Si l'employé a des rencontres
+                    employes[emp_id]['rencontres'].append({
                         'client_nom': row['client_nom'],
                         'client_prenom': row['client_prenom'],
                         'client_telephone': row['client_telephone'],
                         'date_heure': row['date_heure']
                     })
 
-            # Ajouter le dernier employé traité
-            if current_employe is not None:
-                employes_avec_rencontres.append(current_employe)
+            data = list(employes.values())
+            print("data ", data)
+    except Exception as Exception_services_afficher:
+        raise ExceptionEmpRencontreAfficher(
+            f"{Path(__file__).name} ; {show_employes_rencontres.__name__} ; {Exception_services_afficher}")
 
-    except Exception as Exception_emp_rencontre_afficher:
-        raise ExceptionEmpRencontreAfficher(f"{Path(__file__).name} ; {employes_rencontres.__name__} ; {Exception_emp_rencontre_afficher}")
+    return render_template('employes/emp_rencontres_afficher.html', data=data)
 
-    return render_template(
-            'employes/emp_rencontres_afficher.html',
-            employes=employes,
-            employes_avec_rencontres=employes_avec_rencontres
-        )
-
-
-# Filtres de template
+# Filtre pour formater les dates
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%d/%m/%Y %H:%M'):
     if value is None:
         return ""
-    if isinstance(value, str):
-        value = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
     return value.strftime(format)
-

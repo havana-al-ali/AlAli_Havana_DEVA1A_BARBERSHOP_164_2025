@@ -35,7 +35,7 @@ def services_afficher(order_by, id_service_sel):
                     flash("Données des services affichées !!", "success")
 
         except Exception as Exception_services_afficher:
-            raise ExceptionGenresAfficher(f"{Path(__file__).name} ; {services_afficher.__name__} ; {Exception_services_afficher}")
+            raise ExceptionEmpRencontreAfficher(f"{Path(__file__).name} ; {services_afficher.__name__} ; {Exception_services_afficher}")
 
     return render_template("services/services_afficher.html", data=data_services)
 
@@ -68,7 +68,7 @@ def services_ajouter_wtf():
         except Exception as Exception_services_ajouter:
             raise ExceptionGenresAjouterWtf(f"{Path(__file__).name} ; {services_ajouter_wtf.__name__} ; {Exception_services_ajouter}")
 
-    return render_template("services/services_ajouter_wtf.html", form=form)
+    return render_template("services/services_ajouter_wtf.html", data=form)
 
 
 @app.route("/service_update", methods=['GET', 'POST'])

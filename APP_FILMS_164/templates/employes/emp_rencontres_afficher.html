@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %} Agenda des rencontres {% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="my-4">
+                <i class="fas fa-calendar-alt"></i> Agenda des rencontres employés-clients
+            </h1>
+
+            <!-- Filtres de recherche - FORMULAIRE FONCTIONNEL -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('employes_rencontres') }}" class="form-inline">
+                        <div class="form-group mr-3">
+                            <label for="employe_id" class="mr-2">Employé:</label>
+                            <select class="form-control" id="employe_id" name="employe_id">
+                                <option value="0">Tous les employés</option>
+                                {% for employe in employes %}
+                                <option value="{{ employe.id_employes }}"
+                                    {% if request.args.get('employe_id')|int == employe.id_employes %}selected{% endif %}>
+                                    {{ employe.prenom }} {{ employe.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <label for="date_filter" class="mr-2">Date:</label>
+                            <input type="date" class="form-control" id="date_filter" name="date_filter"
+                                   value="{{ request.args.get('date_filter', '') }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Filtrer
+                        </button>
+                        <a href="{{ url_for('employes_rencontres') }}" class="btn btn-secondary ml-2">
+                            <i class="fas fa-times"></i> Réinitialiser
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Liste des employés avec leurs rencontres -->
+            {% for employe in employes_avec_rencontres %}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">
+                            {{ employe.prenom }} {{ employe.nom }}
+                            <small class="text-light">({{ employe.specialite }})</small>
+                        </h3>
+                        <span class="badge badge-light">
+                            {{ employe.rencontres|length }} rencontre(s)
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if employe.rencontres %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Date/Heure</th>
+                                    <th>Client</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rencontre in employe.rencontres %}
+                                <tr>
+                                    <td>
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ rencontre.date_heure|datetimeformat('%d/%m/%Y') }}
+                                        <br>
+                                        <i class="far fa-clock"></i>
+                                        {{ rencontre.date_heure|datetimeformat('%H:%M') }}
+                                    </td>
+                                    <td>
+                                        {{ rencontre.client_prenom }} {{ rencontre.client_nom }}
+                                    </td>
+                                    <td>
+                                        <a href="tel:{{ rencontre.client_telephone }}">
+                                            <i class="fas fa-phone"></i>
+                                            {{ rencontre.client_telephone }}
+                                        </a>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        Aucune rencontre prévue pour cet employé.
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-warning">
+                Aucun employé avec des rencontres programmées.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
