@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Afficher CLIENTS{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <p>Clients</p>
+            <table class="table table-bordered table-sm">
+                {% if data %}
+                <thead>
+                    <tr>
+                        <th>id clients</th>
+                        <th>nom</th>
+                        <th>prenom</th>
+                        <th>telephone</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row.id_clients }}</td>
+                        <td>{{ row.nom }}</td>
+                        <td>{{ row.prenom }}</td>
+                        <td>{{ row.telephone }}</td>
+                        <td>
+                            <a class="btn btn-primary" href="{{ url_for('clients_ajouter_wtf') }}" role="button">Ajouter</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" href="{{ url_for('client_update_wtf', id_client=row.id_clients) }}" role="button">Update</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" href="{{ url_for('client_delete_wtf', id_client=row.id_clients) }}" role="button">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% else %}
+                <tbody>
+                    <tr>
+                        <td colspan="7" class="text-center">Aucun client.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            <a class="btn btn-primary" href="{{ url_for('clients_ajouter_wtf') }}" role="button">Ajouter</a>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

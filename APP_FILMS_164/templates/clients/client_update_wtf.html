@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %} Editer un CLIENT (WTF) {% endblock %}
+{% block body %}
+<div class="container">
+    <h3>Editer un client</h3>
+    <form method="POST" novalidate>
+        {{ form_update.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form_update.nom_client_update_wtf.label }}<br>
+            {{ form_update.nom_client_update_wtf(size=32) }}
+            {% for error in form_update.nom_client_update_wtf.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form_update.prenom_client_update_wtf.label }}<br>
+            {{ form_update.prenom_client_update_wtf(size=32) }}
+            {% for error in form_update.prenom_client_update_wtf.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form_update.telephone_client_update_wtf.label }}<br>
+            {{ form_update.telephone_client_update_wtf(size=32) }}
+            {% for error in form_update.telephone_client_update_wtf.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+
+        {{ form_update.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

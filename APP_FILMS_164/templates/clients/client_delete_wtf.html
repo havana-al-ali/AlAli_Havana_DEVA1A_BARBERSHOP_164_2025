@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Effacer un CLIENT (WTF){% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <p>Effacer un CLIENT</p>
+            <form action="" method="POST" novalidate>
+                <!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
+                {{ form_delete.hidden_tag() }}
+
+                {% if data_films_attribue_client_delete %}
+                    <h3>Ce client est associé avec le(s) film(s) suivant(s) :</h3>
+                {% else %}
+                    <h3>Ce client à effacer n'est associé à aucun film.</h3>
+                {% endif %}
+
+                {% if data_films_attribue_client_delete %}
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>FILM(S)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data_films_attribue_client_delete %}
+                                <tr>
+                                    <td>{{ row.nom_film }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                <div class="form-group">
+                    <p>
+                        {{ form_delete.nom_client_delete_wtf.label }}<br>
+                        {{ form_delete.nom_client_delete_wtf(size=32, readonly="readonly", class="form-control") }}<br>
+                        {% for error in form_delete.nom_client_delete_wtf.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                </div>
+
+                {{ form_delete.submit_btn_del(class="btn btn-danger") }}
+                {{ form_delete.submit_btn_annuler(class="btn btn-primary") }}
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
