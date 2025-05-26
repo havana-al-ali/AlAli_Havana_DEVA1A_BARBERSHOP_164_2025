@@ -9,6 +9,9 @@
                 <!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
                 {{ form_delete.hidden_tag() }}
 
+                <!-- Champ caché pour transmettre l'ID du client à supprimer -->
+                <input type="hidden" name="id_client_btn_delete_html" value="{{ request.values.get('id_client_btn_delete_html') }}">
+
                 {% if data_films_attribue_client_delete %}
                     <h3>Ce client est associé avec le(s) film(s) suivant(s) :</h3>
                 {% else %}
