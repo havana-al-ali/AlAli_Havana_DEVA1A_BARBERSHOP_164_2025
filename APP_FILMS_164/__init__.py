@@ -58,10 +58,6 @@ try:
     from APP_FILMS_164.services import gestion_services_crud
     from APP_FILMS_164.services import gestion_services_wtf_forms
 
-    # Ajout gestion evaluer (CRUD et WTF forms)
-    #from APP_FILMS_164.evaluer import gestion_evaluer_crud
-    #from APP_FILMS_164.evaluer import gestion_evaluer_wtf_forms
-
     # from APP_FILMS_164.emoloyes_clients import gestion_employes_clients_crud
     from APP_FILMS_164.erreurs import msg_avertissements
 
