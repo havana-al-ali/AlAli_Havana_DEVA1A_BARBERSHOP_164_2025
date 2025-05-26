@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	<title>{% block title %}Mon beau projet{% endblock %}</title>
 
 	<!-- Bootstrap CSS en local -->
@@ -15,25 +15,23 @@
 
 	<!-- Stylesheets en local -->
 	<!-- https://bootswatch.com/solar/-->
-<!--	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/solar/bootstrap.min.css') }}">-->
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/solar/bootstrap.min.css') }}"> -->
 	<!-- https://bootswatch.com/darkly/ -->
-<!--	 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/darkly/bootstrap.min.css') }}">-->
-	<!--	https://bootswatch.com/cyborg/-->
-<!--	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/cyborg/bootstrap.min.css') }}">-->
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/darkly/bootstrap.min.css') }}"> -->
+	<!-- https://bootswatch.com/cyborg/ -->
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/cyborg/bootstrap.min.css') }}"> -->
 	<!-- https://bootswatch.com/superhero/ -->
-<!--	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/superhero/bootstrap.min.css') }}">-->
-	<!--	https://bootswatch.com/vapor/-->
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-53/vapor/bootstrap.min.css') }}">
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-4/superhero/bootstrap.min.css') }}"> -->
+	<!-- https://bootswatch.com/vapor/ -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootswatch-53/vapor/bootstrap.min.css') }}" />
 	<!-- https://flask.palletsprojects.com/en/1.1.x/patterns/favicon/ -->
-	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
-	{% block head %}
-	{% endblock %}
+	{% block head %}{% endblock %}
 </head>
 <body>
 
-
-{% block header %} {% endblock %}
+{% block header %}{% endblock %}
 
 {% include 'flash_messages.html' %}
 <!-- Navigation -->
@@ -49,14 +47,18 @@
 					<li class="nav-item">
 						<a class="nav-link" href="{{ url_for('clients_afficher', order_by='ASC', id_client_sel=0) }}">Clients</a>
 					</li>
-                    <li class="nav-item">
+					<li class="nav-item">
 						<a class="nav-link" href="{{ url_for('employes_afficher', order_by='ASC', id_employe_sel=0) }}">Employes</a>
 					</li>
-                    <li class="nav-item">
+					<li class="nav-item">
 						<a class="nav-link" href="{{ url_for('employes_rencontres') }}">Employes agenda</a>
 					</li>
-                    <li class="nav-item">
+					<li class="nav-item">
 						<a class="nav-link" href="{{ url_for('services_afficher', order_by='ASC', id_service_sel=0) }}">Services</a>
+					</li>
+                    <!-- Nouveau lien vers la gestion des évaluations -->
+                    <li class="nav-item">
+						<a class="nav-link" href="{{ url_for('evaluer_afficher') }}">Évaluations</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{ url_for('personnes_taille_dict') }}">Démo "TAILLE"</a>
@@ -80,14 +82,12 @@
 		</div>
 	</nav>
 </div>
-
 <!-- End Navigation -->
 
 {% block body %}{% endblock %}
 
-{% block javascript %}
+{% block javascript %}{% endblock %}
 
-{% endblock %}
 {% include 'footer.html' %}
 </body>
 </html>

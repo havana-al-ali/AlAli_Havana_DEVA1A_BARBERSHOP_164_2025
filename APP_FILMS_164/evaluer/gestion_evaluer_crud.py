@@ -1,177 +1,186 @@
 from pathlib import Path
-from flask import redirect, request, session, url_for, flash, render_template
+from flask import flash, redirect, render_template, request, url_for
+
+from APP_FILMS_164 import app
 from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.erreurs.exceptions import *
-from APP_FILMS_164.employes.gestion_employes_wtf_forms import FormWTFUpdateEmploye, FormWTFAddEmploye, FormWTFDeleteEmploye
+from APP_FILMS_164.evaluer.gestion_evaluer_wtf_forms import (
+    FormWTFAjouterEvaluer,
+    FormWTFDeleteEvaluer,
+    FormWTFUpdateEvaluer,
+)
 
-@app.route("/rencontrer/<string:order_by>/<int:id_rencontrer_sel>", methods=['GET', 'POST'])
-def rencontrer_afficher(order_by, id_rencontrer_sel):
+# Afficher les évaluations
+@app.route("/evaluer/", defaults={"order_by": "ASC", "id_evaluer_sel": 0})
+@app.route("/evaluer/<string:order_by>/<int:id_evaluer_sel>", methods=['GET', 'POST'])
+def evaluer_afficher(order_by, id_evaluer_sel):
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                if order_by == "ASC" and id_rencontrer_sel == 0:
-                    strsql_rencontrer_afficher = """SELECT * from t_rencontrer ORDER BY id_rencontrer ASC"""
-                    mc_afficher.execute(strsql_rencontrer_afficher)
+                if order_by == "ASC" and id_evaluer_sel == 0:
+                    strsql_evaluer_afficher = "SELECT * from t_evaluer ORDER BY id_evaluer ASC"
+                    mc_afficher.execute(strsql_evaluer_afficher)
                 elif order_by == "ASC":
-                    valeur_id_rencontrer_selected_dictionnaire = {"value_id_rencontrer_selected": id_rencontrer_sel}
-                    strsql_rencontrer_afficher = """SELECT * FROM t_rencontrer WHERE id_rencontrer = %(value_id_rencontrer_selected)s"""
-                    mc_afficher.execute(strsql_rencontrer_afficher, valeur_id_rencontrer_selected_dictionnaire)
+                    valeur_id_evaluer_selected = {"value_id_evaluer_selected": id_evaluer_sel}
+                    strsql_evaluer_afficher = """
+                        SELECT * FROM t_evaluer WHERE id_evaluer = %(value_id_evaluer_selected)s
+                    """
+                    mc_afficher.execute(strsql_evaluer_afficher, valeur_id_evaluer_selected)
                 else:
-                    strsql_rencontrer_afficher = """SELECT * FROM t_rencontrer ORDER BY id_rencontrer DESC"""
-                    mc_afficher.execute(strsql_rencontrer_afficher)
+                    strsql_evaluer_afficher = "SELECT * FROM t_evaluer ORDER BY id_evaluer DESC"
+                    mc_afficher.execute(strsql_evaluer_afficher)
 
-                data_rencontrer = mc_afficher.fetchall()
-                print("data_rencontrer ", data_rencontrer, " Type : ", type(data_rencontrer))
+                data_evaluer = mc_afficher.fetchall()
 
-                if not data_rencontrer and id_rencontrer_sel == 0:
-                    flash("""La table "t_rencontrer" est vide. !!""", "warning")
-                elif not data_rencontrer and id_rencontrer_sel > 0:
-                    flash(f"Le rencontrer demandé n'existe pas !!", "warning")
+                if not data_evaluer and id_evaluer_sel == 0:
+                    flash('La table "t_evaluer" est vide.', "warning")
+                elif not data_evaluer and id_evaluer_sel > 0:
+                    flash("L'évaluation demandée n'existe pas.", "warning")
                 else:
-                    flash(f"Données rencontrer affichées !!", "success")
+                    flash("Données évaluations affichées.", "success")
 
-        except Exception as Exception_rencontrer_afficher:
-            raise ExceptionRencontrerAfficher(f"fichier : {Path(__file__).name}  ;  "
-                                          f"{rencontrer_afficher.__name__} ; "
-                                          f"{Exception_rencontrer_afficher}")
+        except Exception as e:
+            raise ExceptionEvaluerAfficher(f"fichier : {Path(__file__).name}  ;  "
+                                          f"{evaluer_afficher.__name__} ; "
+                                          f"{e}")
 
-    return render_template("rencontrer/rencontrer_afficher.html", data=data_rencontrer)
+    return render_template("evaluer/evaluer_afficher.html", data=data_evaluer)
 
-
-@app.route("/employe_add", methods=['GET', 'POST'])
-def rencontrer_add_wtf():
-    form_add_rencontrer = FormWTFAddRencontrer()
+# Ajouter une évaluation
+@app.route("/evaluer_ajouter", methods=['GET', 'POST'])
+def evaluer_ajouter_wtf():
+    form = FormWTFAjouterEvaluer()
     if request.method == "POST":
         try:
-            if form_add_rencontrer.validate_on_submit():
-                nom_emp_add = form_add_rencontrer.nom_rencontrer_wtf.data
-                prenom_emp_add = form_add_employe.prenom_employe_wtf.data
-                telephone_emp_add = form_add_employe.telephone_employe_wtf.data
-                specialite_emp_add = form_add_employe.specialite_employe_wtf.data
+            if form.validate_on_submit():
+                # Adapte ici selon tes champs dans la table t_evaluer
+                note = form.note_wtf.data
+                commentaire = form.commentaire_wtf.data
+                id_client = form.id_client_wtf.data
+                id_service = form.id_service_wtf.data  # Modifie ici si c'est FK_services et pas FK_employes
 
-                valeurs_insertion_dictionnaire = {
-                    "value_nom_employe": nom_emp_add,
-                    "value_prenom_employe": prenom_emp_add,
-                    "value_telephone_employe": telephone_emp_add,
-                    "value_specialite_employe": specialite_emp_add
+                valeurs_insertion = {
+                    "value_note": note,
+                    "value_commentaire": commentaire,
+                    "value_id_client": id_client,
+                    "value_id_service": id_service
                 }
-                print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
 
-                strsql_insert_employe = """INSERT INTO t_employes (id_rencontrer,  FK_clients, FK_employes, date_heure) 
-                                           VALUES (NULL, %(value_nom_employe)s, %(value_prenom_employe)s, %(value_telephone_employe)s, %(value_specialite_employe)s)"""
+                strsql_insert_evaluer = """
+                    INSERT INTO t_evaluer (note, commentaire, FK_clients, FK_services) 
+                    VALUES (%(value_note)s, %(value_commentaire)s, %(value_id_client)s, %(value_id_service)s)
+                """
+
                 with DBconnection() as mconn_bd:
-                    mconn_bd.execute(strsql_insert_rencontrer, valeurs_insertion_dictionnaire)
+                    mconn_bd.execute(strsql_insert_evaluer, valeurs_insertion)
 
-                flash(f"Données rencontrer insérées !!", "success")
-                print(f"Données rencontrer insérées !!")
+                flash("Évaluation ajoutée avec succès.", "success")
+                return redirect(url_for('evaluer_afficher', order_by='DESC', id_evaluer_sel=0))
 
-                return redirect(url_for('rencontrer_afficher', id_rencontrer_sel=0))
+        except Exception as e:
+            raise ExceptionEvaluerAjouterWtf(f"fichier : {Path(__file__).name}  ;  "
+                                            f"{evaluer_ajouter_wtf.__name__} ; "
+                                            f"{e}")
 
-        except Exception as Exception_rencontrer_ajouter_wtf:
-            raise ExceptionRencontrerAjouterWtf(f"fichier : {Path(__file__).name}  ;  "
-                                             f"{rencontrer_add_wtf.__name__} ; "
-                                             f"{Exception_rencontrer_ajouter_wtf}")
+    return render_template("evaluer/evaluer_ajouter_wtf.html", form=form)
 
-    return render_template("rencontrer/rencontrer_add_wtf.html", form_add_rencontrer=form_add_rencontrer)
+# Mettre à jour une évaluation
+@app.route("/evaluer_update", methods=['GET', 'POST'])
+def evaluer_update_wtf():
+    id_evaluer_update = request.values.get('id_evaluer', None)
+    if id_evaluer_update is None:
+        flash("Erreur : aucune évaluation sélectionnée pour la mise à jour.", "danger")
+        return redirect(url_for('evaluer_afficher', order_by='ASC', id_evaluer_sel=0))
 
-
-@app.route("/rencontrer_update", methods=['GET', 'POST'])
-def rencontrer_update_wtf():
-    id_rencontrer_update = request.values['id_employe_btn_edit_html']
-    form_update_employe = FormWTFUpdateEmploye()
+    form_update = FormWTFUpdateEvaluer()
 
     try:
-        if request.method == "POST" and form_update_employe.submit.data:
-            nom_employe_update = form_update_employe.nom_employe_update_wtf.data
-            prenom_employe_update = form_update_employe.prenom_employe_update_wtf.data
-            telephone_employe_update = form_update_employe.telephone_employe_update_wtf.data
-            specialite_employe_update = form_update_employe.specialite_employe_update_wtf.data
+        if request.method == "POST" and form_update.submit.data:
+            note_update = form_update.note_update_wtf.data
+            commentaire_update = form_update.commentaire_update_wtf.data
 
-            valeur_update_dictionnaire = {
-                "value_id_employe": id_employe_update,
-                "value_nom_employe": nom_employe_update,
-                "value_prenom_employe": prenom_employe_update,
-                "value_telephone_employe": telephone_employe_update,
-                "value_specialite_employe": specialite_employe_update
+            valeur_update = {
+                "value_id_evaluer": id_evaluer_update,
+                "value_note": note_update,
+                "value_commentaire": commentaire_update
             }
-            print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_rencontrer = """UPDATE t_employes SET date_heure = %(value_nom_employe)s,
-                                                              prenom = %(value_prenom_employe)s,
-                                                              telephone = %(value_telephone_employe)s,
-                                                              specialite = %(value_specialite_employe)s
-                                                              WHERE id_employes = %(value_id_employe)s"""
+            str_sql_update_evaluer = """
+                UPDATE t_evaluer
+                SET note = %(value_note)s,
+                    commentaire = %(value_commentaire)s
+                WHERE id_evaluer = %(value_id_evaluer)s
+            """
+
             with DBconnection() as mconn_bd:
-                mconn_bd.execute(str_sql_update_rencontrer, valeur_update_dictionnaire)
+                mconn_bd.execute(str_sql_update_evaluer, valeur_update)
 
-            flash(f"Donnée rencontrer mise à jour !!", "success")
-            print(f"Donnée rencontrer mise à jour !!")
+            flash("Évaluation mise à jour.", "success")
+            return redirect(url_for('evaluer_afficher', order_by="ASC", id_evaluer_sel=id_evaluer_update))
 
-            return redirect(url_for('rencontrer_afficher', id_rencontrer_sel=id_rencontrer_update))
         elif request.method == "GET":
-            str_sql_id_rencontrer = "SELECT * FROM t_rencontrer WHERE id_rencontrer = %(value_id_rencontrer)s"
-            valeur_select_dictionnaire = {"value_id_rencontrer": id_rencontrer_update}
+            str_sql_id_evaluer = "SELECT * FROM t_evaluer WHERE id_evaluer = %(value_id_evaluer)s"
+            valeur_select = {"value_id_evaluer": id_evaluer_update}
+
             with DBconnection() as mybd_conn:
-                mybd_conn.execute(str_sql_id_rencontrer, valeur_select_dictionnaire)
-            data_rencontrer = mybd_conn.fetchone()
-            print("data_rencontrer ", data_rencontrer, " type ", type(data_employe), " rencontrer ",
-                  data_rencontrer["date_heure"])
+                mybd_conn.execute(str_sql_id_evaluer, valeur_select)
+                data_evaluer = mybd_conn.fetchone()
 
-            form_update_rencontrer.nom_rencontrer_update_wtf.data = data_rencontrer["date_heure"]
+            if data_evaluer:
+                form_update.note_update_wtf.data = data_evaluer["note"]
+                form_update.commentaire_update_wtf.data = data_evaluer["commentaire"]
+            else:
+                flash("Évaluation non trouvée pour mise à jour.", "warning")
+                return redirect(url_for('evaluer_afficher', order_by="ASC", id_evaluer_sel=0))
 
-            #form_update_employe.prenom_employe_update_wtf.data = data_employe["prenom"]
-            #form_update_employe.telephone_employe_update_wtf.data = data_employe["telephone"]
-            #form_update_employe.specialite_employe_update_wtf.data = data_employe["specialite"]
+    except Exception as e:
+        raise ExceptionEvaluerUpdateWtf(f"fichier : {Path(__file__).name}  ;  "
+                                       f"{evaluer_update_wtf.__name__} ; "
+                                       f"{e}")
 
-    except Exception as Exception_rencontrer_update_wtf:
-        raise ExceptionRencontrerUpdateWtf(f"fichier : {Path(__file__).name}  ;  "
-                                       f"{rencontrer_update_wtf.__name__} ; "
-                                       f"{Exception_rencontrer_update_wtf}")
+    return render_template("evaluer/evaluer_update_wtf.html", form_update=form_update)
 
-    return render_template("rencontrer/rencontrer_update_wtf.html", form_update_rencontrer=form_update_rencontrer)
+# Supprimer une évaluation
+@app.route("/evaluer_delete", methods=['GET', 'POST'])
+def evaluer_delete_wtf():
+    id_evaluer_delete = request.values.get('id_evaluer_btn_delete_html', None)
+    if id_evaluer_delete is None:
+        flash("Erreur : aucune évaluation sélectionnée pour la suppression.", "danger")
+        return redirect(url_for('evaluer_afficher', order_by="ASC", id_evaluer_sel=0))
 
+    form_delete = FormWTFDeleteEvaluer()
 
-@app.route("/rencontrer_delete", methods=['GET', 'POST'])
-def rencontrer_delete_wtf():
-    data_rencontrer_delete = None
-    btn_submit_del = None
-    id_rencontrer_delete = request.values['id_rencontrer_btn_delete_html']
-
-    form_delete_rencontrer = FormWTFDeleteRencontrer()
     try:
-        if form_delete_rencontrer.submit_btn_annuler.data:
-            return redirect(url_for("rencontrer_afficher", id_rencontrer_sel=0))
+        if request.method == "POST" and form_delete.validate_on_submit():
+            if form_delete.submit_btn_annuler.data:
+                return redirect(url_for("evaluer_afficher", order_by="ASC", id_evaluer_sel=0))
 
-        if form_delete_rencontrer.submit_btn_conf_del_rencontrer.data:
-            data_employe_delete = session['data_rencontrer_delete']
-            flash(f"Effacer le rencontrer de façon définitive de la BD !!!", "danger")
-            btn_submit_del = True
+            if form_delete.submit_btn_del.data:
+                str_sql_delete_evaluer = "DELETE FROM t_evaluer WHERE id_evaluer = %(value_id_evaluer)s"
+                with DBconnection() as mconn_bd:
+                    mconn_bd.execute(str_sql_delete_evaluer, {"value_id_evaluer": id_evaluer_delete})
 
-        if form_delete_rencontrer.submit_btn_del_rencontrer.data:
-            valeur_delete_dictionnaire = {"value_id_rencontrer": id_rencontrer_delete}
-            str_sql_delete_rencontrer = """DELETE FROM t_rencontrer WHERE id_rencontrer = %(value_id_rencontrer)s"""
-            with DBconnection() as mconn_bd:
-                mconn_bd.execute(str_sql_delete_rencontrer, valeur_delete_dictionnaire)
+                flash("Évaluation supprimée.", "success")
+                return redirect(url_for('evaluer_afficher', order_by="ASC", id_evaluer_sel=0))
 
-            flash(f"Rencontrer définitivement effacé !!", "success")
-            return redirect(url_for('rencontrer_afficher', id_employe_sel=0))
+        elif request.method == "GET":
+            str_sql_evaluer = "SELECT * FROM t_evaluer WHERE id_evaluer = %(value_id_evaluer)s"
+            with DBconnection() as mc_conn:
+                mc_conn.execute(str_sql_evaluer, {"value_id_evaluer": id_evaluer_delete})
+                data_evaluer_delete = mc_conn.fetchone()
 
-        if request.method == "GET":
-            valeur_select_dictionnaire = {"value_id_employe": id_employe_delete}
-            str_sql_rencontrer_delete = """SELECT * FROM t_rencontrer WHERE id_rencontrer = %(value_id_rencontrer)s"""
-            with DBconnection() as mydb_conn:
-                mydb_conn.execute(str_sql_rencontrer_delete, valeur_select_dictionnaire)
-                data_rencontrer_delete = mydb_conn.fetchall()
-                session['data_rencontrer_delete'] = data_rencontrer_delete
+            if data_evaluer_delete:
+                form_delete.note_evaluer_delete_wtf.data = data_evaluer_delete["note"]
+                form_delete.commentaire_evaluer_delete_wtf.data = data_evaluer_delete["commentaire"]
+            else:
+                flash("Évaluation non trouvée pour suppression.", "warning")
+                return redirect(url_for('evaluer_afficher', order_by="ASC", id_evaluer_sel=0))
 
-            btn_submit_del = False
+    except Exception as e:
+        raise ExceptionEvaluerDeleteWtf(f"fichier : {Path(__file__).name}  ;  "
+                                       f"{evaluer_delete_wtf.__name__} ; "
+                                       f"{e}")
 
-    except Exception as Exception_rencontrer_delete_wtf:
-        raise ExceptionRencontrerDeleteWtf(f"fichier : {Path(__file__).name}  ;  "
-                                       f"{rencontrer_delete_wtf.__name__} ; "
-                                       f"{Exception_rencontrer_delete_wtf}")
-
-    return render_template("rencontrer/rencontrer_delete_wtf.html",
-                           form_delete_rencontrer=form_delete_employe,
-                           btn_submit_del=btn_submit_del,
-                           data_rencontrer_del=data_rencontrer_delete)
+    return render_template("evaluer/evaluer_delete_wtf.html",
+                           form_delete=form_delete,
+                           data_evaluer_delete=data_evaluer_delete)

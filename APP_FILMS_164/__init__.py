@@ -1,5 +1,6 @@
-"""Initialisation des variables d'environnement
-    Auteur : OM 2023.03.21 Indispensable pour définir les variables indispensables dans tout le projet.
+"""
+Initialisation des variables d'environnement
+Auteur : OM 2023.03.21 Indispensable pour définir les variables indispensables dans tout le projet.
 """
 import sys
 
@@ -36,7 +37,7 @@ try:
         sys.exit()
 
     """
-        Tout commence ici. Il faut "indiquer" les routes de l'applicationn.    
+        Tout commence ici. Il faut "indiquer" les routes de l'application.    
         Dans l'application les lignes ci-dessous doivent se trouver ici... soit après l'instanciation de la classe "Flask"
     """
     from APP_FILMS_164.database import database_tools
@@ -56,6 +57,10 @@ try:
     # services
     from APP_FILMS_164.services import gestion_services_crud
     from APP_FILMS_164.services import gestion_services_wtf_forms
+
+    # Ajout gestion evaluer (CRUD et WTF forms)
+    from APP_FILMS_164.evaluer import gestion_evaluer_crud
+    from APP_FILMS_164.evaluer import gestion_evaluer_wtf_forms
 
     # from APP_FILMS_164.emoloyes_clients import gestion_employes_clients_crud
     from APP_FILMS_164.erreurs import msg_avertissements

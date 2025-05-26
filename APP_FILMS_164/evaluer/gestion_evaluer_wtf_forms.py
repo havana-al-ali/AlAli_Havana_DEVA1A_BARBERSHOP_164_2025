@@ -1,70 +1,68 @@
-"""Gestion des formulaires avec WTF pour les films
-Fichier : gestion_films_wtf_forms.py
-Auteur : OM 2022.04.11
-
-"""
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DateField
-from wtforms import SubmitField
-from wtforms.validators import Length, InputRequired, NumberRange, DataRequired
-from wtforms.validators import Regexp
-from wtforms.widgets import TextArea
+from wtforms import StringField, IntegerField, SubmitField, TextAreaField, SelectField
+from wtforms.validators import Length, InputRequired, NumberRange
 
 
-class FormWTFAddEmploye(FlaskForm):
+class FormWTFAjouterEvaluer(FlaskForm):
     """
-        Dans le formulaire "genres_ajouter_wtf.html" on impose que le champ soit rempli.
-        Définition d'un "bouton" submit avec un libellé personnalisé.
+    Formulaire pour ajouter une évaluation
     """
-    nom_emp_regexp = ""
-    nom_emp_wtf = StringField("Nom de l'employé ", validators=[Length(min=2, max=2000, message="min 2 max 20"),
-                                                               Regexp(nom_emp_regexp,
-                                                                      message="Pas de chiffres, de caractères "
-                                                                              "spéciaux, "
-                                                                              "d'espace à double, de double "
-                                                                              "apostrophe, de double trait union")
-                                                               ])
+    note_wtf = IntegerField(
+        "Note (1 à 5)",
+        validators=[
+            InputRequired(message="La note est obligatoire"),
+            NumberRange(min=1, max=5, message="La note doit être entre 1 et 5"),
+        ],
+    )
+    commentaire_wtf = TextAreaField(
+        "Commentaire",
+        validators=[
+            Length(min=5, max=1000, message="Le commentaire doit faire entre 5 et 1000 caractères")
+        ],
+    )
+    id_client_wtf = SelectField(
+        "Client",
+        coerce=int,
+        validators=[InputRequired(message="Le client est obligatoire")],
+        choices=[]  # À remplir dynamiquement dans la vue
+    )
+    id_service_wtf = SelectField(
+        "Service",
+        coerce=int,
+        validators=[InputRequired(message="Le service est obligatoire")],
+        choices=[]  # À remplir dynamiquement dans la vue
+    )
+
+    submit = SubmitField("Ajouter l'évaluation")
 
 
-
-
-    submit = SubmitField("Enregistrer emp")
-
-
-class FormWTFUpdateEmploye(FlaskForm):
+class FormWTFUpdateEvaluer(FlaskForm):
     """
-        Dans le formulaire "film_update_wtf.html" on impose que le champ soit rempli.
-        Définition d'un "bouton" submit avec un libellé personnalisé.
+    Formulaire pour mettre à jour une évaluation
     """
+    note_update_wtf = IntegerField(
+        "Note (1 à 5)",
+        validators=[
+            InputRequired(message="La note est obligatoire"),
+            NumberRange(min=1, max=5, message="La note doit être entre 1 et 5"),
+        ],
+    )
+    commentaire_update_wtf = TextAreaField(
+        "Commentaire",
+        validators=[
+            Length(min=5, max=1000, message="Le commentaire doit faire entre 5 et 1000 caractères")
+        ],
+    )
 
-    nom_film_update_wtf = StringField("Clavioter le titre", widget=TextArea())
-    duree_film_update_wtf = IntegerField("Durée du film (minutes)", validators=[NumberRange(min=1, max=5000,
-                                                                                            message=u"Min %(min)d et "
-                                                                                                    u"max %(max)d "
-                                                                                                    u"Selon Wikipédia "
-                                                                                                    u"L'Incendie du "
-                                                                                                    u"monastère du "
-                                                                                                    u"Lotus rouge "
-                                                                                                    u"durée 1620 "
-                                                                                                    u"min")])
-
-    description_film_update_wtf = StringField("Description du film ", widget=TextArea())
-    cover_link_film_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
-    datesortie_film_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
-                                                                                 DataRequired("Date non valide")])
-    submit = SubmitField("Update film")
+    submit = SubmitField("Mettre à jour l'évaluation")
 
 
-class FormWTFDeleteEmploye(FlaskForm):
+class FormWTFDeleteEvaluer(FlaskForm):
     """
-        Dans le formulaire "film_delete_wtf.html"
-
-        nom_film_delete_wtf : Champ qui reçoit la valeur du film, lecture seule. (readonly=true)
-        submit_btn_del : Bouton d'effacement "DEFINITIF".
-        submit_btn_conf_del : Bouton de confirmation pour effacer un "film".
-        submit_btn_annuler : Bouton qui permet d'afficher la table "t_film".
+    Formulaire pour supprimer une évaluation
     """
-    nom_film_delete_wtf = StringField("Effacer ce film")
-    submit_btn_del_film = SubmitField("Effacer film")
-    submit_btn_conf_del_film = SubmitField("Etes-vous sur d'effacer ?")
+    note_evaluer_delete_wtf = IntegerField("Note (lecture seule)", render_kw={"readonly": True})
+    commentaire_evaluer_delete_wtf = TextAreaField("Commentaire (lecture seule)", render_kw={"readonly": True})
+    submit_btn_del = SubmitField("Effacer l'évaluation")
+    submit_btn_conf_del = SubmitField("Confirmer la suppression")
     submit_btn_annuler = SubmitField("Annuler")
