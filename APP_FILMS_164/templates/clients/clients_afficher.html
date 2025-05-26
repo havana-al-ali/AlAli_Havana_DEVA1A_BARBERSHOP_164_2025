@@ -32,7 +32,7 @@
                             <a class="btn btn-warning" href="{{ url_for('client_update_wtf', id_client=row.id_clients) }}" role="button">Update</a>
                         </td>
                         <td>
-                            <a class="btn btn-danger" href="{{ url_for('client_delete_wtf', id_client=row.id_clients) }}" role="button">Delete</a>
+                            <a class="btn btn-danger" href="{{ url_for('client_delete_wtf', id_client_btn_delete_html=row.id_clients) }}" role="button">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}

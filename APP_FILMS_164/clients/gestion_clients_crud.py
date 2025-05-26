@@ -100,15 +100,18 @@ def client_update_wtf():
     try:
         if request.method == "POST" and form_update.submit.data:
             name_client_update = form_update.nom_client_update_wtf.data
-            name_client_update = name_client_update.lower()
+            prenom_client_update = form_update.prenom_client_update_wtf.data
+            telephone_client_update = form_update.telephone_client_update_wtf.data
 
             valeur_update_dictionnaire = {
                 "value_id_client": id_client_update,
-                "value_name_client": name_client_update
+                "value_name_client": name_client_update,
+                "value_prenom_client": prenom_client_update,
+                "value_telephone_client": telephone_client_update
             }
 
             str_sql_update_intituleclient = """
-                UPDATE t_clients SET nom = %(value_name_client)s
+                UPDATE t_clients SET nom = %(value_name_client)s,prenom = %(value_prenom_client)s, telephone = %(value_telephone_client)s
                 WHERE id_clients = %(value_id_client)s
             """
 
@@ -119,7 +122,7 @@ def client_update_wtf():
             return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=id_client_update))
 
         elif request.method == "GET":
-            str_sql_id_client = "SELECT id_clients, nom FROM t_clients WHERE id_clients = %(value_id_client)s"
+            str_sql_id_client = "SELECT * FROM t_clients WHERE id_clients = %(value_id_client)s"
             valeur_select_dictionnaire = {"value_id_client": id_client_update}
 
             with DBconnection() as mybd_conn:
@@ -128,6 +131,8 @@ def client_update_wtf():
 
             if data_nom_client:
                 form_update.nom_client_update_wtf.data = data_nom_client["nom"]
+                form_update.prenom_client_update_wtf.data = data_nom_client["prenom"]
+                form_update.telephone_client_update_wtf.data = data_nom_client["telephone"]
             else:
                 flash("Client non trouvé pour mise à jour.", "warning")
                 return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
@@ -139,7 +144,7 @@ def client_update_wtf():
 
     return render_template("clients/client_update_wtf.html", form_update=form_update)
 
-# Suppression client
+
 @app.route("/client_delete", methods=['GET', 'POST'])
 def client_delete_wtf():
     id_client_delete = request.values.get('id_client_btn_delete_html', None)
@@ -148,47 +153,74 @@ def client_delete_wtf():
         return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
 
     form_delete = FormWTFDeleteClient()
-    data_films_attribue_client_delete = None
+    data_dependances_client_delete = None
 
     try:
         with DBconnection() as mc_conn:
-            str_sql_films = "SELECT * FROM t_films WHERE id_clients_fk = %(value_id_client)s"
-            mc_conn.execute(str_sql_films, {"value_id_client": id_client_delete})
-            data_films_attribue_client_delete = mc_conn.fetchall()
+            # Vérifier les dépendances dans toutes les tables liées
+            str_sql_dependances = """
+                SELECT 'rencontre' AS source, id_rencontrer AS id, date_heure AS info 
+                FROM t_rencontrer WHERE FK_clients = %(value_id_client)s
+                UNION ALL
+                SELECT 'evaluation' AS source, id_evaluer AS id, CONCAT('Note: ', note, ' - ', date_avis) AS info 
+                FROM t_evaluer WHERE FK_clients = %(value_id_client)s
+            """
+            mc_conn.execute(str_sql_dependances, {"value_id_client": id_client_delete})
+            data_dependances_client_delete = mc_conn.fetchall()
 
         if request.method == "POST" and form_delete.validate_on_submit():
             if form_delete.submit_btn_annuler.data:
                 return redirect(url_for("clients_afficher", order_by="ASC", id_client_sel=0))
 
             if form_delete.submit_btn_del.data:
-                if data_films_attribue_client_delete:
-                    flash("Impossible de supprimer ce client car il est lié à des films.", "danger")
+                if data_dependances_client_delete:
+                    flash("Impossible de supprimer ce client car il est lié à d'autres données.", "danger")
                     return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
                 else:
+                    # Suppression normale sans dépendances
                     str_sql_delete_client = "DELETE FROM t_clients WHERE id_clients = %(value_id_client)s"
                     with DBconnection() as mconn_bd:
                         mconn_bd.execute(str_sql_delete_client, {"value_id_client": id_client_delete})
-
-                    flash("Client supprimé.", "success")
+                    flash("Client supprimé avec succès.", "success")
                     return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
 
+            if form_delete.submit_btn_force_del.data:
+                # Suppression forcée - on supprime d'abord les dépendances
+                with DBconnection() as mconn_bd:
+                    # Supprimer d'abord les rencontres
+                    str_sql_delete_rencontres = "DELETE FROM t_rencontrer WHERE FK_clients = %(value_id_client)s"
+                    mconn_bd.execute(str_sql_delete_rencontres, {"value_id_client": id_client_delete})
+
+                    # Supprimer ensuite les évaluations
+                    str_sql_delete_evaluations = "DELETE FROM t_evaluer WHERE FK_clients = %(value_id_client)s"
+                    mconn_bd.execute(str_sql_delete_evaluations, {"value_id_client": id_client_delete})
+
+                    # Enfin supprimer le client
+                    str_sql_delete_client = "DELETE FROM t_clients WHERE id_clients = %(value_id_client)s"
+                    mconn_bd.execute(str_sql_delete_client, {"value_id_client": id_client_delete})
+
+                flash("Client et toutes ses données associées ont été supprimés avec succès.", "success")
+                return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
+
         elif request.method == "GET":
-            str_sql_client = "SELECT id_clients, nom FROM t_clients WHERE id_clients = %(value_id_client)s"
+            str_sql_client = "SELECT * FROM t_clients WHERE id_clients = %(value_id_client)s"
             with DBconnection() as mc_conn:
                 mc_conn.execute(str_sql_client, {"value_id_client": id_client_delete})
                 data_client = mc_conn.fetchone()
 
             if data_client:
                 form_delete.nom_client_delete_wtf.data = data_client["nom"]
+                form_delete.prenom_client_delete_wtf.data = data_client["prenom"]
+                form_delete.telephone_client_delete_wtf.data = data_client["telephone"]
             else:
                 flash("Client non trouvé pour suppression.", "warning")
                 return redirect(url_for('clients_afficher', order_by="ASC", id_client_sel=0))
 
     except Exception as Exception_client_delete_wtf:
         raise ExceptionClientDeleteWtf(f"fichier : {Path(__file__).name}  ;  "
-                                      f"{client_delete_wtf.__name__} ; "
-                                      f"{Exception_client_delete_wtf}")
+                                       f"{client_delete_wtf.__name__} ; "
+                                       f"{Exception_client_delete_wtf}")
 
     return render_template("clients/client_delete_wtf.html",
                            form_delete=form_delete,
-                           data_films_attribue_client_delete=data_films_attribue_client_delete)
+                           data_dependances_client_delete=data_dependances_client_delete)

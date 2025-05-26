@@ -6,48 +6,60 @@
         <div class="col-md-12">
             <p>Effacer un CLIENT</p>
             <form action="" method="POST" novalidate>
-                <!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
                 {{ form_delete.hidden_tag() }}
-
-                <!-- Champ caché pour transmettre l'ID du client à supprimer -->
                 <input type="hidden" name="id_client_btn_delete_html" value="{{ request.values.get('id_client_btn_delete_html') }}">
 
-                {% if data_films_attribue_client_delete %}
-                    <h3>Ce client est associé avec le(s) film(s) suivant(s) :</h3>
-                {% else %}
-                    <h3>Ce client à effacer n'est associé à aucun film.</h3>
-                {% endif %}
-
-                {% if data_films_attribue_client_delete %}
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th>FILM(S)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in data_films_attribue_client_delete %}
+                {% if data_dependances_client_delete %}
+                    <div class="alert alert-danger">
+                        <h3>Attention ! Ce client est associé avec les données suivantes :</h3>
+                        <table class="table table-bordered table-sm">
+                            <thead>
                                 <tr>
-                                    <td>{{ row.nom_film }}</td>
+                                    <th>Type</th>
+                                    <th>ID</th>
+                                    <th>Information</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for row in data_dependances_client_delete %}
+                                    <tr>
+                                        <td>{{ row.source }}</td>
+                                        <td>{{ row.id }}</td>
+                                        <td>{{ row.info }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <p>La suppression normale n'est pas possible. Vous pouvez forcer la suppression qui supprimera aussi toutes les données associées.</p>
+                    </div>
+                {% else %}
+                    <h3>Ce client à effacer n'est associé à aucune autre donnée.</h3>
                 {% endif %}
 
+                <!-- Afficher les informations du client -->
                 <div class="form-group">
-                    <p>
-                        {{ form_delete.nom_client_delete_wtf.label }}<br>
-                        {{ form_delete.nom_client_delete_wtf(size=32, readonly="readonly", class="form-control") }}<br>
-                        {% for error in form_delete.nom_client_delete_wtf.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </p>
+                    <p>{{ form_delete.nom_client_delete_wtf.label }}<br>
+                    {{ form_delete.nom_client_delete_wtf(size=32, readonly="readonly", class="form-control") }}</p>
+                </div>
+                <div class="form-group">
+                    <p>{{ form_delete.prenom_client_delete_wtf.label }}<br>
+                    {{ form_delete.prenom_client_delete_wtf(size=32, readonly="readonly", class="form-control") }}</p>
+                </div>
+                <div class="form-group">
+                    <p>{{ form_delete.telephone_client_delete_wtf.label }}<br>
+                    {{ form_delete.telephone_client_delete_wtf(size=32, readonly="readonly", class="form-control") }}</p>
                 </div>
 
-                {{ form_delete.submit_btn_del(class="btn btn-danger") }}
-                {{ form_delete.submit_btn_annuler(class="btn btn-primary") }}
-
+                <!-- Boutons -->
+                <div class="d-flex justify-content-between">
+                    {{ form_delete.submit_btn_annuler(class="btn btn-primary") }}
+                    <div>
+                        {% if data_dependances_client_delete %}
+                            {{ form_delete.submit_btn_force_del(class="btn btn-danger") }}
+                        {% endif %}
+                        {{ form_delete.submit_btn_del(class="btn btn-warning") }}
+                    </div>
+                </div>
             </form>
         </div>
     </div>

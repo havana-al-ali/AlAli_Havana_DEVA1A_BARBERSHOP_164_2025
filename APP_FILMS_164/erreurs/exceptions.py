@@ -10,6 +10,8 @@ class Base(Exception):
         self.message = message
 
 
+
+
 class ErreurFichierSqlDump(Base):
     pass
 
@@ -39,6 +41,16 @@ class DatabaseException(Base):
 
 class SqlException(DatabaseException):
     pass
+
+class ExceptionClientsAfficher():
+    pass
+class ExceptionClientUpdateWtf():
+    pass
+class ExceptionClientsAjouterWtf():
+    pass
+class ExceptionClientDeleteWtf(Base):
+    pass
+
 
 class SqlSyntaxError(SqlException):
     pass
