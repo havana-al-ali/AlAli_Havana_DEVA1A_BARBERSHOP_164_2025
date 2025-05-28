@@ -111,7 +111,7 @@ def service_update_wtf():
                 form_update.duree_service_update_wtf.data = data_service["duree"]
 
     except Exception as Exception_service_update:
-        raise ExceptionGenreUpdateWtf(f"{Path(__file__).name} ; {service_update_wtf.__name__} ; {Exception_service_update}")
+        raise ExceptionServiceUpdateWtf(f"{Path(__file__).name} ; {service_update_wtf.__name__} ; {Exception_service_update}")
 
     return render_template("services/service_update_wtf.html", form_update=form_update)
 
@@ -153,7 +153,7 @@ def service_delete_wtf():
                 btn_submit_del = False
 
     except Exception as Exception_service_delete:
-        raise ExceptionGenreDeleteWtf(f"{Path(__file__).name} ; {service_delete_wtf.__name__} ; {Exception_service_delete}")
+        raise ExceptionServiceDeleteWtf(f"{Path(__file__).name} ; {service_delete_wtf.__name__} ; {Exception_service_delete}")
 
     return render_template("services/service_delete_wtf.html",
                            form_delete=form_delete,

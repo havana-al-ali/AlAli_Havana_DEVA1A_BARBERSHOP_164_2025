@@ -58,10 +58,10 @@
 							<a class="btn btn-primary" href="{{ url_for('services_ajouter_wtf') }}" role="button">Ajouter</a>
 						</td>
 						<td class="text-center" class="align-middle">
-							<a class="btn btn-warning" href="{{ url_for('service_update_wtf', id_genre_btn_edit_html=row.id_genre) }}" role="button">Edit</a>
+							<a class="btn btn-warning" href="{{ url_for('service_update_wtf', id_service_btn_edit_html=row.id_genre) }}" role="button">Edit</a>
 						</td>
 						<td class="text-center" class="align-middle">
-							<a class="btn btn-danger" href="{{ url_for('service_delete_wtf', id_genre_btn_delete_html=row.id_genre) }}" role="button">Delete</a>
+							<a class="btn btn-danger" href="{{ url_for('service_delete_wtf', id_service_btn_delete_html=row.id_genre) }}" role="button">Delete</a>
 						</td>
 					</tr>
 				</tbody>
@@ -69,7 +69,7 @@
 				<tbody>
 					<tr>
 						<td>
-							Aucun genre.
+							Aucun service.
 						</td>
 						<td>
 							<a class="btn btn-primary" href="{{ url_for('services_ajouter_wtf') }}" role="button">Ajouter</a>
