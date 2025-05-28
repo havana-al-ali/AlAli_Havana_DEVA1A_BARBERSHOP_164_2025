@@ -21,7 +21,7 @@ class MonPremierWTForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(message="Mot de passe indispensable !")])
 
     nom_client_regexp = "^([A-Z]|[a-zÀ-ÖØ-öø-ÿ])[A-Za-zÀ-ÖØ-öø-ÿ]*['\- ]?[A-Za-zÀ-ÖØ-öø-ÿ]+$"
-    nom_genre_wtf = StringField("Clavioter le client ", validators=[Length(min=2, max=20, message="min 2 max 20"),
+    nom_clients_wtf = StringField("Clavioter le client ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                    Regexp(nom_client_regexp,
                                                                           message="Pas de chiffres, de caractères "
                                                                                   "spéciaux, d'espace à double, "

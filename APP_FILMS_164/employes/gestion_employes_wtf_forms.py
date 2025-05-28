@@ -52,12 +52,12 @@ class FormWTFUpdateEmploye(FlaskForm):
     cover_link_employe_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
     datesortie_employe_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
                                                                                  DataRequired("Date non valide")])
-    submit = SubmitField("Update film")
+    submit = SubmitField("Update employe")
 
 
 class FormWTFDeleteEmploye(FlaskForm):
     """
-        Dans le formulaire "film_delete_wtf.html"
+        Dans le formulaire "employe_delete_wtf.html"
 
         nom_film_delete_wtf : Champ qui reçoit la valeur du film, lecture seule. (readonly=true)
         submit_btn_del : Bouton d'effacement "DEFINITIF".
