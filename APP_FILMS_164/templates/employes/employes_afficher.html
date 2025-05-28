@@ -59,7 +59,7 @@
 
 					  </th>
 					  <th class="align-middle">
-						<img class="img" src={{ row.cover_link_film|default(None, True) }} style="border: 0;display:block; width:150px; max-height:auto;"  alt = "image masquée FFP8 (in COVID-19 Memory) (absente) mod 164">
+						<img class="img" src={{ row.cover_link_employe|default(None, True) }} style="border: 0;display:block; width:150px; max-height:auto;"  alt = "image masquée FFP8 (in COVID-19 Memory) (absente)">
 					  </th>
 					  <th class="align-middle">
 						<a class="btn btn-primary" href="{{ url_for('avertissement_sympa_pour_geeks') }}" role="button">Ajouter</a>
@@ -75,7 +75,7 @@
 							<a class="btn btn-warning" href="{{ url_for('employe_update_wtf', id_employe_btn_edit_html=row.id_employes) }}" role="button">Modifier</a>
 						</td>
 						<td class="align-middle" colspan="5">
-							{{ row.GenresFilms|default("PAS DE GENRES", True) }}
+							{{ row.ClientsEmployes|default("Homme", True) }}
 						</td>
 					</tr>
 				</tr>
@@ -84,7 +84,7 @@
 				<tbody>
 					<tr>
 						<td>
-							Aucun film.
+							Aucun employe.
 						</td>
 						<td>
 							<a class="btn btn-primary" href="{{ url_for('avertissement_sympa_pour_geeks') }}" role="button">Add</a>

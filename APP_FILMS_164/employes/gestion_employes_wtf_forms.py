@@ -1,5 +1,5 @@
-"""Gestion des formulaires avec WTF pour les films
-Fichier : gestion_films_wtf_forms.py
+"""Gestion des formulaires avec WTF pour les employes
+Fichier : gestion_employes_wtf_forms.py
 Auteur : OM 2022.04.11
 
 """
@@ -13,7 +13,7 @@ from wtforms.widgets import TextArea
 
 class FormWTFAddEmploye(FlaskForm):
     """
-        Dans le formulaire "genres_ajouter_wtf.html" on impose que le champ soit rempli.
+        Dans le formulaire "employes_ajouter_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
     """
     nom_emp_regexp = ""
@@ -33,12 +33,12 @@ class FormWTFAddEmploye(FlaskForm):
 
 class FormWTFUpdateEmploye(FlaskForm):
     """
-        Dans le formulaire "film_update_wtf.html" on impose que le champ soit rempli.
+        Dans le formulaire "employe_update_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
     """
 
-    nom_film_update_wtf = StringField("Clavioter le titre", widget=TextArea())
-    duree_film_update_wtf = IntegerField("Durée du film (minutes)", validators=[NumberRange(min=1, max=5000,
+    nom_employe_update_wtf = StringField("Clavioter le titre", widget=TextArea())
+    duree_employe_update_wtf = IntegerField("Durée du film (minutes)", validators=[NumberRange(min=1, max=5000,
                                                                                             message=u"Min %(min)d et "
                                                                                                     u"max %(max)d "
                                                                                                     u"Selon Wikipédia "
@@ -48,9 +48,9 @@ class FormWTFUpdateEmploye(FlaskForm):
                                                                                                     u"durée 1620 "
                                                                                                     u"min")])
 
-    description_film_update_wtf = StringField("Description du film ", widget=TextArea())
-    cover_link_film_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
-    datesortie_film_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
+    description_employe_update_wtf = StringField("Description du film ", widget=TextArea())
+    cover_link_employe_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
+    datesortie_employe_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
                                                                                  DataRequired("Date non valide")])
     submit = SubmitField("Update film")
 
@@ -64,7 +64,7 @@ class FormWTFDeleteEmploye(FlaskForm):
         submit_btn_conf_del : Bouton de confirmation pour effacer un "film".
         submit_btn_annuler : Bouton qui permet d'afficher la table "t_film".
     """
-    nom_film_delete_wtf = StringField("Effacer ce film")
-    submit_btn_del_film = SubmitField("Effacer film")
-    submit_btn_conf_del_film = SubmitField("Etes-vous sur d'effacer ?")
+    nom_employe_delete_wtf = StringField("Effacer ce employe")
+    submit_btn_del_employe = SubmitField("Effacer employe")
+    submit_btn_conf_del_employe = SubmitField("Etes-vous sur d'effacer ?")
     submit_btn_annuler = SubmitField("Annuler")
