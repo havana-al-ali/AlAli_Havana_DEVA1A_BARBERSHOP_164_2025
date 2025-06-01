@@ -1,7 +1,10 @@
 # Projet du barbershop 2025
-J'ai réalisé ce projet grace au meilleur professeur (Olivier Maccaud) :)
+
+J'ai réalisé ce projet grâce au meilleur professeur (Olivier Maccaud) :)
 
 🧱 Structure du projet
+
+```plaintext
 AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
 │
 ├── run_mon_app.py
@@ -22,8 +25,7 @@ AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
 │   │   ├── evaluer
 │   │   ├── services
 │   │   └── rencontrer
-        └── executer
-
+│       └── executer
 │
 │   ├── views/
 │   │   ├── gestion_clients_crud.py
@@ -60,26 +62,25 @@ AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
 │   │   │   ├── employes_update_wtf.html
 │   │   │   ├── employes_afficher.html
 │   │   │   └── employes_add_wtf.html
-            └── emp_rencontres_afficher.html
+│   │       └── emp_rencontres_afficher.html
 │   │
 │   │   ├── services/
 │   │       ├── services_delete_wtf.html
-│   │   │   ├── services_update_wtf.html
-│   │   │   ├── services_afficher.html
+│   │       ├── services_update_wtf.html
+│   │       ├── services_afficher.html
 │   │       └── services_ajouter_wtf.html
 │   │
 │   │   ├── evaluer/
 │   │   │   └── evaluer_afficher.html
 │   │
-│   │
 │   │   ├── executer/
-│   │   │  executer_afficher.html
+│   │   │   executer_afficher.html
 │   │
 │   │   └── zzz_essais_om_104/
 │   │       ├── base.html
 │   │       ├── home.html
 │   │       └── readme.html
-            ├── footer.html
+│   │       ├── footer.html
 │   │       ├── 404.html
 
 
