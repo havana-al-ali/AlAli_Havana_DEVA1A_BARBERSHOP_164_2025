@@ -1,83 +1,148 @@
+<!-- templates/readme.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>README — Barbershop 2025</title>
+    <title>README – Barbershop Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        body { font-family: Arial, sans-serif; margin: 2em; background: #f8f8f8; color: #333; }
-        h1, h2 { color: #B22222; }
-        ul { list-style: square; }
-        code { background: #eee; padding: 2px 4px; border-radius: 3px; }
-        a { color: #0066cc; }
-        .section { margin-bottom: 2em; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #b30000;
+        }
+        code, pre {
+            background-color: #f4f4f4;
+            padding: 5px;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <h1>💈 Barbershop Manager 2025</h1>
+    <p><strong>Développé par : Havana Al-Ali</strong></p>
+    <p>Grace au meilleur prof.Olivier Maccaud</p>
+    <h2>📌 Description du projet</h2>
+    <p>Application web de gestion d’un salon de coiffure (barbershop). CRUD complet réalisé avec Flask et Python.</p>
+    <h2>✂️ Fonctionnalités principales</h2>
+    <ul>
+        <li>Gestion des employés (barbiers)</li>
+        <li>Suivi des clients</li>
+        <li>Services proposés (coupe, rasage, soins...)</li>
+        <li>Rendez-vous et historique</li>
+    </ul>
+    <div class="container mt-4">
+    <h1 class="mb-4">🧱 Structure du projet</h1>
+    <pre style="background:#f8f9fa; padding:20px; border-radius:10px;">
+AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
+│
+├── run_mon_app.py
+├── .env
+├── README.md
+│
+├── APP_FILMS_164/
+│   ├── __init__.py
+│
+│   ├── database/
+│   │   ├── __init__.py
+│   │   ├── 1_ImportationDumpSql.py
+│   │   └── alali_havana_deva1a_barbershop.sql
+│
+│   ├── models/
+│   │   ├── clients
+│   │   ├── employes
+│   │   ├── evaluer
+│   │   ├── services
+│   │   ├── rencontrer
+│   │   └── executer
+│
+│   ├── views/
+│   │   ├── gestion_clients_crud.py
+│   │   ├── gestion_employes_crud.py
+│   │   ├── gestion_evaluer_crud.py
+│   │   ├── gestion_services_crud.py
+│   │   ├── gestion_rencontrer_crud.py
+│   │   ├── gestion_executer_crud.py
+│   │   ├── gestion_clients_wtf_forms.py
+│   │   ├── gestion_employes_wtf_forms.py
+│   │   ├── gestion_evaluer_wtf_forms.py
+│   │   ├── gestion_services_wtf_forms.py
+│   │   ├── gestion_rencontrer_wtf_forms.py
+│   │   └── gestion_executer_wtf_forms.py
+│
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   ├── readme.html
+│   │
+│   │   ├── clients/
+│   │   │   ├── clients_delete_wtf.html
+│   │   │   ├── client_update_wtf.html
+│   │   │   ├── clients_afficher.html
+│   │   │   └── clients_ajouter_wtf.html
+│   │
+│   │   ├── employes/
+│   │   │   ├── employes_delete_wtf.html
+│   │   │   ├── employes_update_wtf.html
+│   │   │   ├── employes_afficher.html
+│   │   │   ├── employes_add_wtf.html
+│   │   │   └── emp_rencontres_afficher.html
+│   │
+│   │   ├── services/
+│   │   │   ├── services_delete_wtf.html
+│   │   │   ├── services_update_wtf.html
+│   │   │   ├── services_afficher.html
+│   │   │   └── services_ajouter_wtf.html
+│   │
+│   │   ├── evaluer/
+│   │   │   └── evaluer_afficher.html
+│   │
+│   │   ├── executer/
+│   │   │   └── executer_afficher.html
+│   │
+│   │   └── zzz_essais_om_104/
+│   │       ├── base.html
+│   │       ├── home.html
+│   │       ├── readme.html
+│   │       ├── footer.html
+│   │       └── 404.html
+    </pre>
+</div>
 
-    <h1>💈 Application de Gestion Barbershop 2025</h1>
-    <p><strong>Auteure :</strong> Havana Al-Ali</p>
-    <p>j'ai réalisé ce projet grace au mon meilleur professeur (Olivier Maccaud) :)</p>
 
-    <div class="section">
-        <h2>📌 Présentation</h2>
-        <p>Ce projet est une application web de gestion complète pour un salon de coiffure / barbershop, développée avec <strong>Python Flask</strong>.</p>
-        <p>Il s'agit d'un projet personnel pour mes frères, réalisé dans le cadre du module <strong>164</strong>.</p>
-    </div>
+    <h2>🛠️ Technologies utilisées</h2>
+    <ul>
+        <li>Python</li>
+        <li>Flask</li>
+        <li>WTForms</li>
+        <li>Bootstrap</li>
+        <li>HeidiSQL</li>
+    </ul>
+    <h2>🚀 Lancer l'application</h2>
+     <a href="http://127.0.0.1:5000/homepage">Click ici pour aller sur le site</a></li>
+    <p> exécuter <code>run_mon_app.py</code> dans PyCharm</p>
 
-    <div class="section">
-        <h2>🔧 Technologies utilisées</h2>
-        <ul>
-            <li>Python 3 + Flask</li>
-            <li>HTML / CSS / Bootstrap (si utilisé)</li>
-            <li>SQLite ou MySQL (selon ta base)</li>
-            <li>WTForms</li>
-            <li>Jinja2 (template Flask)</li>
-        </ul>
-    </div>
+    <h2>📦 Installation</h2>
+    <ol>
+        <li>Cloner le projet : <code>git clone ...</code></li>
+        <li>Installer Python : <a href="https://www.python.org/downloads">python.org</a></li>
+        <li>Installer Pycharm </li>
+        <li>Lancer : <code>flask --app run_mon_app.py run</code></li>
+    </ol>
 
-    <div class="section">
-        <h2>🧠 Fonctionnalités principales (CRUD)</h2>
-        <ul>
-            <li><strong>Employés :</strong> création, édition, suppression, spécialités, disponibilité</li>
-            <li><strong>Clients :</strong> gestion des infos personnelles et préférences</li>
-            <li><strong>Services :</strong> types de prestations (coupe, barbe, soins...)</li>
-            <li><strong>Rendez-vous :</strong> prise de rdv, historique, statut</li>
-        </ul>
-    </div>
 
-    <div class="section">
-        <h2>🗃️ Base de données</h2>
-        <p>L’application gère plusieurs tables relationnelles :</p>
-        <ul>
-            <li><code>clients</code></li>
-            <li><code>employes</code></li>
-            <li><code>services</code></li>
-            <li><code>rencontrer</code></li>
-             <li><code>evaluer</code></li>
-             <li><code>executer</code></li>
-        </ul>
-    </div>
-
-    <div class="section">
-        <h2>🚀 Lancer l’application</h2>
-        <p>Utilise le fichier <code>run_mon_app.py</code> :</p>
-        <pre><code>python run_mon_app.py</code></pre>
-        <p>Par défaut, l’application est disponible sur <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a></p>
-    </div>
-
-    <div class="section">
-        <h2>📚 Ressources</h2>
-        <ul>
-            <li><a href="https://flask.palletsprojects.com" target="_blank">Documentation Flask</a></li>
-            <li><a href="https://developer.mozilla.org/fr/docs/Web/HTTP/CORS" target="_blank">Comprendre CORS</a></li>
-            <li><a href="https://github.com/havamod164/AlAli_Havana_DEVA1A_BARBERSHOP_164_2025" target="_blank">GitHub</a> </li>
-        </ul>
-    </div>
-
-    <footer>
-        <hr>
-        <p>Projet développé par Havana Al-Ali — 2025</p>
-    </footer>
-
+    <h2>👩‍💻 Développement</h2>
+     <a href="https://github.com/havamod164/AlAli_Havana_DEVA1A_BARBERSHOP_164_2025">Click ici pour aller sur GitHub</a></li>
+    <p>Projet réalisé dans le cadre du <strong>Module 164</strong>, pour le barbershop familial.</p>
 </body>
 </html>
