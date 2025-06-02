@@ -16,9 +16,7 @@ from flask import render_template
 CORS(app)
 
 # 💡 Ajoute ta route ici (attention à ne pas redéfinir `app`)
-@app.route("/readme")
-def readme():
-    return render_template("readme.html")
+
 
 if __name__ == '__main__':
     app.secret_key = SECRET_KEY_FLASK

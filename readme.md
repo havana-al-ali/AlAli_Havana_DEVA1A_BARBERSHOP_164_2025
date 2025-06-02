@@ -1,12 +1,74 @@
-# Projet du barbershop 2025
+# 💈 Barbershop Manager 2025
 
-Voici le lien de mon fichier readme.html
-http://127.0.0.1:5000/readme
+**👩‍💻 Auteur : Havana Al-Ali — Projet académique | Module i164 | 2025**
+Projet réalisé dans le cadre du Module 164.
+Objectif : outil de gestion interne pour un barbershop familial.
+---
 
-Et ceci le lien de mon github
-https://github.com/havamod164/AlAli_Havana_DEVA1A_BARBERSHOP_164_2025
+## 📌 Description du projet
 
-🧱 Structure du projet
+Application web de gestion d’un salon de coiffure (barbershop).  
+Projet CRUD complet réalisé avec **Flask** et **Python**.
+
+---
+
+## ✂️ Fonctionnalités principales
+
+- Gestion des employés (barbiers)
+- Suivi des clients
+- Services proposés (coupe, rasage, soins…)
+- Rendez-vous et historique
+- Liaison de tables via des modèles relationnels
+- Interface HTML/CSS avec Bootstrap et WTForms
+
+---
+
+## 🛠️ Technologies utilisées
+
+- Python
+- Flask
+- WTForms
+- Bootstrap
+- HeidiSQL
+
+---
+
+## 🚀 Lancer l'application
+
+Dans un terminal :
+
+bash
+python run_mon_app.py
+Ou avec Flask (si configuré) :
+flask --app run_mon_app.py run
+
+🔗 Accès local : http://127.0.0.1:5000/homepage
+
+
+📦 Installation:
+
+1.Cloner le dépôt :
+git clone https://github.com/havamod164/AlAli_Havana_DEVA1A_BARBERSHOP_164_2025.git
+
+2.Installer Python : https://www.python.org/downloads
+
+3.Installer un IDE (ex. : PyCharm, VSCode)
+
+4.Installer les dépendances :
+pip install -r requirements.txt
+
+🗄️ Base de données
+Importer le fichier SQL :
+APP_FILMS_164/database/alali_havana_deva1a_barbershop.sql
+
+📂 Dépôt GitHub
+🔗 https://github.com/havamod164/AlAli_Havana_DEVA1A_BARBERSHOP_164_2025
+
+
+---
+
+## 🧱 Structure du projet
+
 
 ```plaintext
 AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
