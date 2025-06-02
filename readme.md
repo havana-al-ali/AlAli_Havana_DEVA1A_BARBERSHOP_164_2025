@@ -1,6 +1,5 @@
 # Projet du barbershop 2025
 
-J'ai réalisé ce projet grâce au meilleur professeur (Olivier Maccaud) :)
 Voici le lien de mon fichier readme.html
 http://127.0.0.1:5000/readme
 
