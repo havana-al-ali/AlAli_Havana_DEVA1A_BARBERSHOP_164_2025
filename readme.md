@@ -145,7 +145,7 @@ AlAli_Havana_DEVA1A_BARBERSHOP_164_2025/
 │   │   └── zzz_essais_om_104/
 │   │       ├── base.html
 │   │       ├── home.html
-│   │       └── readme.html
+│   │
 │   │       ├── footer.html
 │   │       ├── 404.html
 
