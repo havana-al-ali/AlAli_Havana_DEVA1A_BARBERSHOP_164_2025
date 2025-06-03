@@ -1,70 +1,76 @@
-"""Gestion des formulaires avec WTF pour les employes
+"""Gestion des formulaires avec WTF pour les employés
 Fichier : gestion_employes_wtf_forms.py
-Auteur : OM 2022.04.11
-
+Auteur : OM 2022.04.11, modifié 2025.05.28
 """
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DateField
-from wtforms import SubmitField
-from wtforms.validators import Length, InputRequired, NumberRange, DataRequired
-from wtforms.validators import Regexp
-from wtforms.widgets import TextArea
+from wtforms import StringField, IntegerField, SubmitField
+from wtforms.validators import Length, InputRequired, Regexp
 
 
 class FormWTFAddEmploye(FlaskForm):
     """
-        Dans le formulaire "employes_ajouter_wtf.html" on impose que le champ soit rempli.
-        Définition d'un "bouton" submit avec un libellé personnalisé.
+    Formulaire d'ajout d'un employé
     """
-    nom_emp_regexp = ""
-    nom_emp_wtf = StringField("Nom de l'employé ", validators=[Length(min=2, max=2000, message="min 2 max 20"),
-                                                               Regexp(nom_emp_regexp,
-                                                                      message="Pas de chiffres, de caractères "
-                                                                              "spéciaux, "
-                                                                              "d'espace à double, de double "
-                                                                              "apostrophe, de double trait union")
-                                                               ])
+    nom_employe_wtf = StringField("Nom de l'employé", validators=[
+        InputRequired("Nom obligatoire"),
+        Length(min=2, max=50, message="Nom entre 2 et 50 caractères"),
+        Regexp("^[A-Za-zÀ-ÿ\- ]+$", message="Lettres, espaces ou tirets uniquement")
+    ])
 
+    prenom_employe_wtf = StringField("Prénom de l'employé", validators=[
+        InputRequired("Prénom obligatoire"),
+        Length(min=2, max=50, message="Prénom entre 2 et 50 caractères"),
+        Regexp("^[A-Za-zÀ-ÿ\- ]+$", message="Lettres, espaces ou tirets uniquement")
+    ])
 
+    telephone_employe_wtf = StringField("Téléphone", validators=[
+        InputRequired("Téléphone obligatoire"),
+        Regexp("^[0-9]{10}$", message="10 chiffres requis, sans espace")
+    ])
 
+    specialite_employe_wtf = StringField("Spécialité", validators=[
+        InputRequired("Spécialité obligatoire"),
+        Length(min=2, max=100, message="Spécialité entre 2 et 100 caractères")
+    ])
 
-    submit = SubmitField("Enregistrer emp")
+    submit = SubmitField("Enregistrer employé")
 
 
 class FormWTFUpdateEmploye(FlaskForm):
     """
-        Dans le formulaire "employe_update_wtf.html" on impose que le champ soit rempli.
-        Définition d'un "bouton" submit avec un libellé personnalisé.
+    Formulaire de mise à jour d'un employé
     """
+    nom_employe_update_wtf = StringField("Nom", validators=[
+        InputRequired("Nom obligatoire"),
+        Length(min=2, max=50),
+        Regexp("^[A-Za-zÀ-ÿ\- ]+$")
+    ])
 
-    nom_employe_update_wtf = StringField("Clavioter le titre", widget=TextArea())
-    duree_employe_update_wtf = IntegerField("Durée du film (minutes)", validators=[NumberRange(min=1, max=5000,
-                                                                                            message=u"Min %(min)d et "
-                                                                                                    u"max %(max)d "
-                                                                                                    u"Selon Wikipédia "
-                                                                                                    u"L'Incendie du "
-                                                                                                    u"monastère du "
-                                                                                                    u"Lotus rouge "
-                                                                                                    u"durée 1620 "
-                                                                                                    u"min")])
+    prenom_employe_update_wtf = StringField("Prénom", validators=[
+        InputRequired("Prénom obligatoire"),
+        Length(min=2, max=50),
+        Regexp("^[A-Za-zÀ-ÿ\- ]+$")
+    ])
 
-    description_employe_update_wtf = StringField("Description du film ", widget=TextArea())
-    cover_link_employe_update_wtf = StringField("Lien de l'affiche du film ", widget=TextArea())
-    datesortie_employe_update_wtf = DateField("Date de sortie du film", validators=[InputRequired("Date obligatoire"),
-                                                                                 DataRequired("Date non valide")])
-    submit = SubmitField("Update employe")
+    telephone_employe_update_wtf = StringField("Téléphone", validators=[
+        InputRequired("Téléphone obligatoire"),
+        Regexp("^[0-9]{10}$", message="10 chiffres requis")
+    ])
+
+    specialite_employe_update_wtf = StringField("Spécialité", validators=[
+        InputRequired("Spécialité obligatoire"),
+        Length(min=2, max=100)
+    ])
+
+    submit = SubmitField("Mettre à jour")
 
 
 class FormWTFDeleteEmploye(FlaskForm):
     """
-        Dans le formulaire "employe_delete_wtf.html"
-
-        nom_film_delete_wtf : Champ qui reçoit la valeur du film, lecture seule. (readonly=true)
-        submit_btn_del : Bouton d'effacement "DEFINITIF".
-        submit_btn_conf_del : Bouton de confirmation pour effacer un "film".
-        submit_btn_annuler : Bouton qui permet d'afficher la table "t_film".
+    Formulaire de suppression d'un employé
     """
-    nom_employe_delete_wtf = StringField("Effacer ce employe")
-    submit_btn_del_employe = SubmitField("Effacer employe")
-    submit_btn_conf_del_employe = SubmitField("Etes-vous sur d'effacer ?")
+    nom_employe_delete_wtf = StringField("Effacer cet employé", render_kw={'readonly': True})
+    submit_btn_del_employe = SubmitField("Effacer employé")
+    submit_btn_conf_del_employe = SubmitField("Êtes-vous sûr d'effacer ?")
     submit_btn_annuler = SubmitField("Annuler")
