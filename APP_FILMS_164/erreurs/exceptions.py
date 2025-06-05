@@ -55,6 +55,23 @@ class ExceptionClientDeleteWtf(Base):
 class SqlSyntaxError(SqlException):
     pass
 
+class ExceptionServicesAjouterWtf(Base):
+    pass
+
+class ExceptionServiceUpdateWtf(Base):
+    pass
+
+class ExceptionServiceDeleteWtf(Base):
+    pass
+
+class ExceptionEmployeUpdateWtf(Base):
+    pass
+
+class ExceptionEmployeDeleteWtf(Base):
+    pass
+
+class ExceptionEmployesAjouterWtf(Base):
+    pass
 
 # ... autres exceptions ...
 

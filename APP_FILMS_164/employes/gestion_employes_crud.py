@@ -78,7 +78,7 @@ def employe_add_wtf():
 
 @app.route("/employe_update", methods=['GET', 'POST'])
 def employe_update_wtf():
-    id_employe_update = request.values['id_employe_btn_edit_html']
+    id_employe_update = request.values['id_employe']
     form_update_employe = FormWTFUpdateEmploye()
 
     try:

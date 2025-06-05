@@ -38,27 +38,19 @@
 					<th class="align-middle">
 						{{ row.id_employe }}
 					</th>
-					<th class="align-middle">
-						{{ row.nom_employe }}
+                    <th class="align-middle">
+						{{ row.nom }}
 					</th>
-					<th class="align-middle">
-						{{ row.duree_employe|default("", True) }}
+                    <th class="align-middle">
+						{{ row.prenom }}
 					</th>
-					<th class="align-middle">
-						{{ row.date_sortie_employe|default("", True) }}
+                    <th class="align-middle">
+						{{ row.telephone }}
 					</th>
-					<th class="align-middle">
-						{{ row.description_employe|default("", True) }}
-					</th>
-					<th class="align-middle">
-						<img class="img" src={{ row.cover_link_employe|default(None, True) }}
-							 style="border: 0;display:block; width:150px; max-height:auto;"
-							 alt="image masquée FFP8 (in COVID-19 Memory) (absente) mod 164">
+                    <th class="align-middle">
+						{{ row.specialite }}
 					</th>
 
-				<tr>
-
-				</tr>
 				</tr>
 				</tbody>
 				{% else %}
