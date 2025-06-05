@@ -3,7 +3,9 @@ from pathlib import Path
 from flask import redirect, request, session, url_for, flash, render_template
 from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.erreurs.exceptions import *
-from APP_FILMS_164.employes.gestion_employes_wtf_forms import FormWTFUpdateEmploye, FormWTFAddEmploye, FormWTFDeleteEmploye
+from APP_FILMS_164.employes.gestion_employes_wtf_forms import FormWTFUpdateEmploye, FormWTFAddEmployes, FormWTFDeleteEmploye
+from pymysql.err import IntegrityError
+
 
 @app.route("/employes/<string:order_by>/<int:id_employe_sel>", methods=['GET', 'POST'])
 def employes_afficher(order_by, id_employe_sel):
@@ -39,42 +41,40 @@ def employes_afficher(order_by, id_employe_sel):
     return render_template("employes/employes_afficher.html", data=data_employes)
 
 
-@app.route("/employe_add", methods=['GET', 'POST'])
+@app.route("/employe_add", methods=["GET", "POST"])
 def employe_add_wtf():
-    form_add_employe = FormWTFAddEmploye()
-    if request.method == "POST":
+    form = FormWTFAddEmployes()
+    if request.method == "POST" and form.validate_on_submit():
         try:
-            if form_add_employe.validate_on_submit():
-                nom_emp_add = form_add_employe.nom_employe_wtf.data
-                prenom_emp_add = form_add_employe.prenom_employe_wtf.data
-                telephone_emp_add = form_add_employe.telephone_employe_wtf.data
-                specialite_emp_add = form_add_employe.specialite_employe_wtf.data
+            nom = form.nom_employe_wtf.data
+            prenom = form.prenom_employe_wtf.data
+            telephone = form.telephone_employe_wtf.data
+            specialite = form.specialite_employe_wtf.data
 
-                valeurs_insertion_dictionnaire = {
-                    "value_nom_employe": nom_emp_add,
-                    "value_prenom_employe": prenom_emp_add,
-                    "value_telephone_employe": telephone_emp_add,
-                    "value_specialite_employe": specialite_emp_add
-                }
-                print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
+            valeurs_dict = {
+                "nom": nom,
+                "prenom": prenom,
+                "telephone": telephone,
+                "specialite": specialite
+            }
 
-                strsql_insert_employe = """INSERT INTO t_employes (id_employes, nom, prenom, telephone, specialite) 
-                                           VALUES (NULL, %(value_nom_employe)s, %(value_prenom_employe)s, %(value_telephone_employe)s, %(value_specialite_employe)s)"""
-                with DBconnection() as mconn_bd:
-                    mconn_bd.execute(strsql_insert_employe, valeurs_insertion_dictionnaire)
 
-                flash(f"Données employé insérées !!", "success")
-                print(f"Données employé insérées !!")
+            strsql_insert = """
+                INSERT INTO t_employes (nom, prenom, telephone, specialite)
+                VALUES (%(nom)s, %(prenom)s, %(telephone)s, %(specialite)s)
+            """
 
-                return redirect(url_for('employes_afficher', id_employe_sel=0))
+            with DBconnection() as conn:
+                conn.execute(strsql_insert, valeurs_dict)
 
-        except Exception as Exception_employes_ajouter_wtf:
-            raise ExceptionEmployesAjouterWtf(f"fichier : {Path(__file__).name}  ;  "
-                                             f"{employe_add_wtf.__name__} ; "
-                                             f"{Exception_employes_ajouter_wtf}")
+            flash("✅ Employé ajouté avec succès", "success")
+            return redirect(url_for("employes_afficher", order_by="ASC", id_employe_sel=0))
 
-    return render_template("employes/employe_add_wtf.html", form_add_employe=form_add_employe)
+        except Exception as e:
+            flash(f"❌ Erreur lors de l'ajout de l'employé : {str(e)}", "danger")
+            return redirect(url_for("employe_add_wtf"))
 
+    return render_template("employes/employe_add_wtf.html", form=form)
 
 @app.route("/employe_update", methods=['GET', 'POST'])
 def employe_update_wtf():
@@ -131,6 +131,8 @@ def employe_update_wtf():
     return render_template("employes/employe_update_wtf.html", form_update_employe=form_update_employe)
 
 
+from pymysql.err import IntegrityError
+
 @app.route("/employe_delete", methods=['GET', 'POST'])
 def employe_delete_wtf():
     data_employe_delete = None
@@ -140,21 +142,26 @@ def employe_delete_wtf():
     form_delete_employe = FormWTFDeleteEmploye()
     try:
         if form_delete_employe.submit_btn_annuler.data:
-            return redirect(url_for("employes_afficher", id_employe_sel=0))
+            return redirect(url_for("employes_afficher", order_by="ASC", id_employe_sel=0))
 
         if form_delete_employe.submit_btn_conf_del_employe.data:
             data_employe_delete = session['data_employe_delete']
-            flash(f"Effacer l'employé de façon définitive de la BD !!!", "danger")
+            flash("Effacer l'employé de façon définitive de la BD !!!", "danger")
             btn_submit_del = True
 
         if form_delete_employe.submit_btn_del_employe.data:
             valeur_delete_dictionnaire = {"value_id_employe": id_employe_delete}
             str_sql_delete_employe = """DELETE FROM t_employes WHERE id_employes = %(value_id_employe)s"""
-            with DBconnection() as mconn_bd:
-                mconn_bd.execute(str_sql_delete_employe, valeur_delete_dictionnaire)
+            try:
+                with DBconnection() as mconn_bd:
+                    mconn_bd.execute(str_sql_delete_employe, valeur_delete_dictionnaire)
 
-            flash(f"Employé définitivement effacé !!", "success")
-            return redirect(url_for('employes_afficher', id_employe_sel=0))
+                flash("Employé définitivement effacé !!", "success")
+                return redirect(url_for('employes_afficher', order_by="ASC", id_employe_sel=0))
+
+            except IntegrityError as e:
+                flash("❌ Impossible de supprimer cet employé car il est lié à un ou plusieurs rendez-vous.", "warning")
+                return redirect(url_for("employes_afficher", order_by="ASC", id_employe_sel=0))
 
         if request.method == "GET":
             valeur_select_dictionnaire = {"value_id_employe": id_employe_delete}

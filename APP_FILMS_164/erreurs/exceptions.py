@@ -63,6 +63,8 @@ class ExceptionServiceUpdateWtf(Base):
 
 class ExceptionServiceDeleteWtf(Base):
     pass
+class ExceptionEmployeAddWtf(Base):
+    pass
 
 class ExceptionEmployeUpdateWtf(Base):
     pass
@@ -70,8 +72,7 @@ class ExceptionEmployeUpdateWtf(Base):
 class ExceptionEmployeDeleteWtf(Base):
     pass
 
-class ExceptionEmployesAjouterWtf(Base):
-    pass
+
 
 # ... autres exceptions ...
 

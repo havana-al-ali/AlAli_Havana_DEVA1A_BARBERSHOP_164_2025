@@ -8,7 +8,7 @@ from wtforms import StringField, IntegerField, SubmitField
 from wtforms.validators import Length, InputRequired, Regexp
 
 
-class FormWTFAddEmploye(FlaskForm):
+class FormWTFAddEmployes(FlaskForm):
     """
     Formulaire d'ajout d'un employé
     """

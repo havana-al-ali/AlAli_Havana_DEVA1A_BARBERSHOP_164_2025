@@ -1,30 +1,34 @@
 {% extends "base.html" %}
 
-{% block content %}
-  <h2>Ajouter un employé</h2>
-  <form method="POST">
-    {{ form_add_employe.hidden_tag() }}
+{% block title %}Ajouter un employé{% endblock %}
 
-    <div class="form-group">
-      {{ form_add_employe.nom_employe_wtf.label }}
-      {{ form_add_employe.nom_employe_wtf(class="form-control") }}
-    </div>
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-white mb-4">Ajouter un employé</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
 
-    <div class="form-group">
-      {{ form_add_employe.prenom_employe_wtf.label }}
-      {{ form_add_employe.prenom_employe_wtf(class="form-control") }}
-    </div>
+        <div class="mb-3">
+            {{ form.nom_employe_wtf.label(class="form-label text-white") }}
+            {{ form.nom_employe_wtf(class="form-control") }}
+        </div>
 
-    <div class="form-group">
-      {{ form_add_employe.telephone_employe_wtf.label }}
-      {{ form_add_employe.telephone_employe_wtf(class="form-control") }}
-    </div>
+        <div class="mb-3">
+            {{ form.prenom_employe_wtf.label(class="form-label text-white") }}
+            {{ form.prenom_employe_wtf(class="form-control") }}
+        </div>
 
-    <div class="form-group">
-      {{ form_add_employe.specialite_employe_wtf.label }}
-      {{ form_add_employe.specialite_employe_wtf(class="form-control") }}
-    </div>
+        <div class="mb-3">
+            {{ form.telephone_employe_wtf.label(class="form-label text-white") }}
+            {{ form.telephone_employe_wtf(class="form-control") }}
+        </div>
 
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-  </form>
+        <div class="mb-3">
+            {{ form.specialite_employe_wtf.label(class="form-label text-white") }}
+            {{ form.specialite_employe_wtf(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-success") }}
+    </form>
+</div>
 {% endblock %}
