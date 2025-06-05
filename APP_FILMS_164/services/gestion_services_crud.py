@@ -4,10 +4,11 @@ from flask import redirect, request, session, url_for, flash, render_template
 from APP_FILMS_164 import app
 from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.erreurs.exceptions import *
-from APP_FILMS_164.services.gestion_services_wtf_forms import FormWTFAjouterServices
-from APP_FILMS_164.services.gestion_services_wtf_forms import FormWTFDeleteService
-from APP_FILMS_164.services.gestion_services_wtf_forms import FormWTFUpdateService
-
+from APP_FILMS_164.services.gestion_services_wtf_forms import (
+    FormWTFAjouterServices,
+    FormWTFDeleteService,
+    FormWTFUpdateService,
+)
 
 @app.route("/services_afficher/<string:order_by>/<int:id_service_sel>", methods=['GET', 'POST'])
 def services_afficher(order_by, id_service_sel):
@@ -48,17 +49,19 @@ def services_ajouter_wtf():
             if form.validate_on_submit():
                 nom_service = form.nom_service_wtf.data
                 prix = form.prix_service_wtf.data
+                description = form.description_service_wtf.data
                 duree = form.duree_service_wtf.data
 
                 valeurs_insertion_dictionnaire = {
                     "value_nom_service": nom_service,
                     "value_prix": prix,
+                    "value_description": description,
                     "value_duree": duree
                 }
 
                 strsql_insert_service = """INSERT INTO t_services 
-                                           (id_services, nom_service, prix, duree) 
-                                           VALUES (NULL, %(value_nom_service)s, %(value_prix)s, %(value_duree)s)"""
+                                           (id_services, nom_service, prix, description,duree) 
+                                           VALUES (NULL, %(value_nom_service)s, %(value_prix)s, %(value_description)s ,%(value_duree)s)"""
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(strsql_insert_service, valeurs_insertion_dictionnaire)
 
@@ -66,20 +69,21 @@ def services_ajouter_wtf():
                 return redirect(url_for('services_afficher', order_by='DESC', id_service_sel=0))
 
         except Exception as Exception_services_ajouter:
-            raise ExceptionGenresAjouterWtf(f"{Path(__file__).name} ; {services_ajouter_wtf.__name__} ; {Exception_services_ajouter}")
+            raise ExceptionServicesAjouterWtf(f"{Path(__file__).name} ; {services_ajouter_wtf.__name__} ; {Exception_services_ajouter}")
 
-    return render_template("services/services_ajouter_wtf.html", data=form)
+    return render_template("services/services_ajouter_wtf.html", form=form)
 
 
 @app.route("/service_update", methods=['GET', 'POST'])
 def service_update_wtf():
-    id_service_update = request.values['id_service_btn_edit_html']
-    form_update = FormWTFUpdateService()
+    id_service_update = request.values.get('id_services', None)
+
+    form = FormWTFUpdateService()
     try:
-        if request.method == "POST" and form_update.submit.data:
-            nom_service = form_update.nom_service_update_wtf.data
-            prix = form_update.prix_service_update_wtf.data
-            duree = form_update.duree_service_update_wtf.data
+        if request.method == "POST" and form.submit.data:
+            nom_service = form.nom_service_update_wtf.data
+            prix = form.prix_service_update_wtf.data
+            duree = form.duree_service_update_wtf.data
 
             valeur_update_dictionnaire = {
                 "value_id_service": id_service_update,
@@ -106,33 +110,34 @@ def service_update_wtf():
                 mybd_conn.execute(str_sql_id_service, valeur_select_dictionnaire)
                 data_service = mybd_conn.fetchone()
 
-                form_update.nom_service_update_wtf.data = data_service["nom_service"]
-                form_update.prix_service_update_wtf.data = data_service["prix"]
-                form_update.duree_service_update_wtf.data = data_service["duree"]
+                form.nom_service_update_wtf.data = data_service["nom_service"]
+                form.prix_service_update_wtf.data = data_service["prix"]
+                form.duree_service_update_wtf.data = data_service["duree"]
 
     except Exception as Exception_service_update:
         raise ExceptionServiceUpdateWtf(f"{Path(__file__).name} ; {service_update_wtf.__name__} ; {Exception_service_update}")
 
-    return render_template("services/service_update_wtf.html", form_update=form_update)
+    return render_template("services/service_update_wtf.html", form=form)
 
 
 @app.route("/service_delete", methods=['GET', 'POST'])
 def service_delete_wtf():
     data_associe_delete = None
     btn_submit_del = None
-    id_service_delete = request.values['id_service_btn_delete_html']
-    form_delete = FormWTFDeleteService()
+    id_service_delete = request.values.get('id_service_delete', None)
+
+    form = FormWTFDeleteService()
     try:
-        if request.method == "POST" and form_delete.validate_on_submit():
-            if form_delete.submit_btn_annuler.data:
+        if request.method == "POST" and form.validate_on_submit():
+            if form.submit_btn_annuler.data:
                 return redirect(url_for("services_afficher", order_by="ASC", id_service_sel=0))
 
-            if form_delete.submit_btn_conf_del.data:
+            if form.submit_btn_conf_del.data:
                 data_associe_delete = session['data_associe_delete']
                 flash("Effacer le service de façon définitive de la BD !!!", "danger")
                 btn_submit_del = True
 
-            if form_delete.submit_btn_del.data:
+            if form.submit_btn_del.data:
                 valeur_delete_dictionnaire = {"value_id_service": id_service_delete}
                 str_sql_delete_service = """DELETE FROM t_services WHERE id_services = %(value_id_service)s"""
                 with DBconnection() as mconn_bd:
@@ -147,7 +152,7 @@ def service_delete_wtf():
             with DBconnection() as mydb_conn:
                 mydb_conn.execute(str_sql_id_service, valeur_select_dictionnaire)
                 data_service = mydb_conn.fetchone()
-                form_delete.nom_service_delete_wtf.data = data_service["nom_service"]
+                form.nom_service_delete_wtf.data = data_service["nom_service"]
 
                 session['data_associe_delete'] = data_associe_delete
                 btn_submit_del = False
@@ -156,6 +161,6 @@ def service_delete_wtf():
         raise ExceptionServiceDeleteWtf(f"{Path(__file__).name} ; {service_delete_wtf.__name__} ; {Exception_service_delete}")
 
     return render_template("services/service_delete_wtf.html",
-                           form_delete=form_delete,
+                           form=form,
                            btn_submit_del=btn_submit_del,
                            data_associe=data_associe_delete)

@@ -19,23 +19,25 @@
 						{% endfor %}
 					</p>
                     <p>
-						{{ form.prix_wtf.label }}<br>
-						{{ form.prix_wtf(size=32) }}<br>
-						{% for error in form.pix_wtf.errors %}
+						{{ form.prix_service_wtf.label }}<br>
+						{{ form.prix_service_wtf(size=32) }}<br>
+						{% for error in form.prix_service_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>
+
                     <p>
-						{{ form.description_wtf.label }}<br>
-						{{ form.description_wtf(size=32) }}<br>
-						{% for error in form.description_wtf.errors %}
+						{{ form.description_service_wtf.label }}<br>
+						{{ form.description_service_wtf(size=32) }}<br>
+						{% for error in form.description_service_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>
+
                   <p>
-						{{ form.duree_wtf.label }}<br>
-						{{ form.duree_wtf(size=32) }}<br>
-						{% for error in form.duree_wtf.errors %}
+						{{ form.duree_service_wtf.label }}<br>
+						{{ form.duree_service_wtf(size=32) }}<br>
+						{% for error in form.duree_service_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>

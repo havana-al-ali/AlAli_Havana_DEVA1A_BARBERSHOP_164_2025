@@ -9,27 +9,33 @@
 			</p>
 			<form action="" method="POST" novalidate>
 				<!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
-				{{ form_update.hidden_tag() }}
+				{{ form.hidden_tag() }}
 				<div class="form-group">
 					<p>
-						{{ form_update.nom_service_update_wtf.label }}<br>
-						{{ form_update.nom_service_update_wtf(size=32) }}<br>
-						{% for error in form_update.nom_service_update_wtf.errors %}
+						{{ form.nom_service_update_wtf.label }}<br>
+						{{ form.nom_service_update_wtf(size=32) }}<br>
+						{% for error in form.nom_service_update_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>
-					<p>
-						{{ form_update.date_service_wtf_essai.label }}<br>
-						{{ form_update.date_service_wtf_essai(size=32) }}<br>
-						{% for error in form_update.date_service_wtf_essai.errors %}
+                                   <p>
+						{{ form.prix_service_update_wtf.label }}<br>
+						{{ form.prix_service_update_wtf(size=32) }}<br>
+						{% for error in form.prix_service_update_wtf.errors %}
+							<span style="color: red;">[{{ error }}]</span>
+						{% endfor %}
+					</p>
+					       <p>
+						{{ form.duree_service_update_wtf.label }}<br>
+						{{ form.duree_service_update_wtf(size=32) }}<br>
+						{% for error in form.duree_service_update_wtf.errors %}
 							<span style="color: red;">[{{ error }}]</span>
 						{% endfor %}
 					</p>
 				</div>
-				{{ form_update.submit(class="btn btn-primary") }}
+				{{ form.submit(class="btn btn-primary") }}
 			</form>
 		</div>
 	</div>
 </div>
 {% endblock %}
-

@@ -6,6 +6,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, IntegerField, SubmitField
+from wtforms.fields.simple import TextAreaField
 from wtforms.validators import Length, InputRequired, DataRequired, Regexp, NumberRange
 
 
@@ -26,6 +27,13 @@ class FormWTFAjouterServices(FlaskForm):
                                         InputRequired(message="Le prix est requis"),
                                         NumberRange(min=0, max=9999, message="Prix entre 0 et 9999")
                                     ])
+
+
+    description_service_wtf = TextAreaField("Description du service",
+                                            validators=[
+                                                Length(max=500, message="Maximum 500 caractères autorisés")
+                                            ])
+
 
     duree_service_wtf = IntegerField("Durée (minutes)",
                                      validators=[
@@ -71,3 +79,5 @@ class FormWTFDeleteService(FlaskForm):
     submit_btn_del = SubmitField("Effacer service")
     submit_btn_conf_del = SubmitField("Êtes-vous sûr de vouloir supprimer ?")
     submit_btn_annuler = SubmitField("Annuler")
+
+
