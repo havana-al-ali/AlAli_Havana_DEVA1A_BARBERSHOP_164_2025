@@ -11,7 +11,7 @@ from wtforms.validators import Regexp
 from wtforms.widgets import TextArea
 
 
-class FormWTFAddEmploye(FlaskForm):
+class FormWTFAddEmployes(FlaskForm):
     """
         Dans le formulaire "genres_ajouter_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
